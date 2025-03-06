@@ -8,19 +8,27 @@ from custom_agents.mcts_agent import MCTSAgent
 # from simulators.offline.mcts_offline_agent import OfflineAgent
 import random, time
 from offline.deck_default import deck1 as deckDefault
-import wandb
+import wandb, pickle
 
 agRand = RandomAgent()
 agMCTS = MCTSAgent()
 
-wandb.init(project="dgisim-regular-mcts", name=f"random_vs_mcts_50")
+wandb.init(project="dgisim-regular-mcts")
 
 p1_wins = 0
 p2_wins = 0
-total_games = 50
+total_games = 1
 
 action_counts = {} # action tracker
 
+try:
+    with open('reg_mcts_bot.pkl', 'rb') as f:
+        agMCTS = pickle.load(f)
+    print("loaded existing model")
+except FileNotFoundError:
+    agMCTS = MCTSAgent()
+    print("using new model")
+    
 wandb.config.update({
     "total_games": total_games,
     "p1_agent": "RandomAgent",
@@ -74,6 +82,7 @@ for i in range(total_games):
         p2_wins += 1
         wandb.log({"P2 wins": p2_wins}, step=i)
     print(action_counts)
+    wandb.log({"Rounds": game_state.round})
     for action, count in action_counts.items():
         wandb.log({action: count}, step=i)
 
@@ -97,3 +106,6 @@ for action, count in action_counts.items():
     print(f"{action}: {count} times")
 
 wandb.finish()
+
+with open('reg_mcts_bot.pkl', 'wb') as f:
+    pickle.dump(agMCTS, f)
