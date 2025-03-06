@@ -78,8 +78,11 @@ class GITCGDoubleMiniGymEnv(AECEnv):
             agent: spaces.Discrete(len(self.actions))
             for agent in self.agents
         }
-        
-        self.reset()
+
+    def action_name(self, action): # for debugging
+        return self.id_to_word[action+1]
+    def action_validity(self, action, agent): # for debugging
+        return self.get_action_mask(agent)[action]
 
     def observe(self, agent):
         return self.observation_spaces[agent]
@@ -149,7 +152,7 @@ class GITCGDoubleMiniGymEnv(AECEnv):
             value = self.actions[action] 
             if "kaeya" in action and self.observation_spaces[agent]["observation"]["Kaeya"]["hp"] <= 0: 
                 continue # current character is dead
-            if self.observation_spaces[agent]["observation"]["declared_end"] and action != "end_round_action":
+            if self.observation_spaces[agent]["observation"]["declared_end"]:
                 continue # need to end round after end
             if "card_type" in action and self.word_to_id[action] not in self.observation_spaces[agent]["observation"]["cards"]:
                 continue  # card not in hand
@@ -159,27 +162,27 @@ class GITCGDoubleMiniGymEnv(AECEnv):
                 continue # not enough energy
             if "hp" in action and self.observation_spaces[agent]["observation"]["Kaeya"]["full"]:
                 continue # full, can't eat more
-            mask[list(self.actions).index(action)] = 1 # valid otherwise
+            mask[self.word_to_id[action] - 1] = 1 # valid otherwise
         return mask
 
     
     def step(self, action):
+
         agent = self.agent_selection
         other_agent = (agent + 1) % 2
+
+        # handling end round
+        if (self.observation_spaces[agent]["observation"]["declared_end"] == 1): # skip turn
+            self.agent_selection = self._agent_selector.next()
+            return
+
         total_dmg = 0
         action = self.id_to_word[action+1]
-        print(self.observation_spaces[agent])
-        print(action, self.observation_spaces[agent]["observation"]["dice"], agent, self.observation_spaces[agent]["observation"]["Kaeya"]["hp"], self.observation_spaces[other_agent]["observation"]["Kaeya"]["hp"], self.terminations)
-
-
-        print("new step")
-        assert self.observation_space(agent).contains(self.observation_spaces[agent])
-        assert self.observation_space(other_agent).contains(self.observation_spaces[other_agent])
 
         # check if action is valid?
-        if self.get_action_mask(agent)[list(self.actions).index(action)] == 0:
+        if self.get_action_mask(agent)[self.word_to_id[action]-1] == 0:
             self.rewards[agent] -= 100 # invalid
-            print("-100 reward")
+            print("agent", agent, "gets -100 reward for invalid action")
             action = "end_round_action"
 
         # subtract dice
@@ -191,6 +194,7 @@ class GITCGDoubleMiniGymEnv(AECEnv):
         # apply action
         if action == "end_round_action":
             self.observation_spaces[agent]["observation"]["declared_end"] = 1
+            print("agent", agent, "declares end round")
         elif "card_type" not in self.actions[action]: # character atk
             atk = self.actions[action]["dmg"]
             atk += self.observation_spaces[agent]["observation"]["Kaeya"]["atk_permanent"] 
@@ -204,20 +208,21 @@ class GITCGDoubleMiniGymEnv(AECEnv):
             # add energy
             if "energy" in self.actions[action]:
                 self.observation_spaces[agent]["observation"]["Kaeya"]["energy"] += self.actions[action]["energy"]
-                self.observation_spaces[agent]["observation"]["Kaeya"]["energy"] = max(self.observation_spaces[agent]["observation"]["Kaeya"]["energy"], self.observation_spaces[agent]["observation"]["Kaeya"]["max_energy"])
+                if self.observation_spaces[agent]["observation"]["Kaeya"]["energy"] > self.observation_spaces[agent]["observation"]["Kaeya"]["max_energy"]:
+                    self.observation_spaces[agent]["observation"]["Kaeya"]["energy"] = self.observation_spaces[agent]["observation"]["Kaeya"]["max_energy"]
             elif self.observation_spaces[agent]["observation"]["Kaeya"]["energy"] == self.observation_spaces[agent]["observation"]["Kaeya"]["max_energy"]:
                 self.observation_spaces[agent]["observation"]["Kaeya"]["energy"] = 0 # use burst
             else:
                 pass # can't use burst, shouldn't happen
             # deal dmg to opposite character 
             self.observation_spaces[other_agent]["observation"]["Kaeya"]["hp"] -= total_dmg
-            print("ATK!!", self.observation_spaces[other_agent]["observation"]["Kaeya"]["hp"] + total_dmg, "->", self.observation_spaces[other_agent]["observation"]["Kaeya"]["hp"])
+            if self.observation_spaces[other_agent]["observation"]["Kaeya"]["hp"] < 0: # no sub-zero sorry
+                self.observation_spaces[other_agent]["observation"]["Kaeya"]["hp"] = 0
+            # print("ATK!!", self.observation_spaces[other_agent]["observation"]["Kaeya"]["hp"] + total_dmg, "->", self.observation_spaces[other_agent]["observation"]["Kaeya"]["hp"])
         else:
-            print("before", self.observation_spaces[agent]["observation"]["cards"])
             self.observation_spaces[agent]["observation"]["cards"] = np.delete(self.observation_spaces[agent]["observation"]["cards"], np.where(self.observation_spaces[agent]["observation"]["cards"] == self.word_to_id[action])[0][0]) if np.any(self.observation_spaces[agent]["observation"]["cards"] == self.word_to_id[action]) else self.observation_spaces[agent]["observation"]["cards"]
             if (len(self.observation_spaces[agent]["observation"]["cards"]) < 5):
                 self.observation_spaces[agent]["observation"]["cards"] = np.append(self.observation_spaces[agent]["observation"]["cards"], 0) # filler for env to retain same size
-            print("after", self.observation_spaces[agent]["observation"]["cards"])
             if "hp" in self.actions[action]:
                 cur_hp = self.observation_spaces[agent]["observation"]["Kaeya"]["hp"]
                 cur_hp += self.actions[action]["hp"]
@@ -246,20 +251,22 @@ class GITCGDoubleMiniGymEnv(AECEnv):
             self.terminations[other_agent] = True
             self.infos[agent] = {"status": 'winner'}
             self.infos[other_agent] = {"status": 'loser'}
+            return
 
         # check for new round
         if self.observation_spaces[agent]["observation"]["declared_end"] and self.observation_spaces[other_agent]["observation"]["declared_end"]:
             self.observation_spaces[agent]["observation"]["Kaeya"]["atk_per_turn_used"] = 0
-            self.observation_spaces[agent]["observation"]["declared_end"] = False
-            self.observation_spaces[agent]["full"] = False
+            self.observation_spaces[agent]["observation"]["declared_end"] = 0
+            self.observation_spaces[agent]["observation"]["Kaeya"]["full"] = 0
             self.observation_spaces[agent]["observation"]["dice"] = 4
             
-            self.observation_spaces[other_agent]["observation"]["declared_end"] = False
-            self.observation_spaces[other_agent]["observation"]["declared_end"] = False
-            self.observation_spaces[other_agent]["full"] = False
+            self.observation_spaces[other_agent]["observation"]["declared_end"] = 0
+            self.observation_spaces[other_agent]["observation"]["declared_end"] = 0
+            self.observation_spaces[other_agent]["observation"]["Kaeya"]["full"] = 0
             self.observation_spaces[other_agent]["observation"]["dice"] = 4
 
             self.turn += 1
+            print()
         
         if (self.turn > 15): # end after 15 rounds
             self.terminations[agent] = True 
@@ -271,11 +278,6 @@ class GITCGDoubleMiniGymEnv(AECEnv):
 
         # switch player for the next step
         self.agent_selection = self._agent_selector.next()
-
-        assert self.observation_space(agent).contains(self.observation_spaces[agent])
-        assert self.observation_space(other_agent).contains(self.observation_spaces[other_agent])
-        print("self + other :D")
-
 
     def close(self):
         pass
