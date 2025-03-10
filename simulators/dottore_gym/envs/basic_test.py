@@ -3,11 +3,13 @@ Basic double mini setup test.
 Running games with valid actions only.
 '''
 
-from gitcg_double_mini_gym_env import GITCGDoubleMiniGymEnv
+# from gitcg_double_mini_gym_env import GITCGDoubleMiniGymEnv
+from gitcg_flat_mini_gym_env import GITCGFlatMiniGymEnv
 import numpy as np
 import random
 
-env = GITCGDoubleMiniGymEnv()
+# env = GITCGDoubleMiniGymEnv()
+env = GITCGFlatMiniGymEnv()
 env.reset()
 
 for agent in env.agent_iter():
