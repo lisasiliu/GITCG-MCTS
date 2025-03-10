@@ -207,20 +207,20 @@ class GITCGFlatMiniGymEnv(AECEnv):
         agent = self.agent_selection
         other_agent = "0" if agent == "1" else "1"
 
-        if action == None:
-            print("action is", action, "for agent", agent)
-            print(self.observation_spaces[agent])
-            print(self.observation_spaces[other_agent])
-            print("terminations:", self.terminations)
-            print("truncations:", self.truncations)
-            print("done:", self.done)
-            self.agent_selection = self._agent_selector.next()
-            return
 
         # handling end round
         if (self.observation_spaces[agent]["observation"]["declared_end"] == 1): # skip turn
             self.agent_selection = self._agent_selector.next()
             return
+        
+        # if action == None:
+        #     print("action is", action, "for agent", agent)
+        #     print(self.observation_spaces[agent])
+        #     print(self.observation_spaces[other_agent])
+        #     print("terminations:", self.terminations)
+        #     print("truncations:", self.truncations)
+        #     self.agent_selection = self._agent_selector.next()
+        #     return
 
         total_dmg = 0
         action = self.id_to_word[action+1]
@@ -298,7 +298,6 @@ class GITCGFlatMiniGymEnv(AECEnv):
             # directly end game here in mini double
             self.terminations[agent] = True 
             self.terminations[other_agent] = True
-            self.done = True
             self.truncations[agent] = True # for parallel env
             self.truncations[other_agent] = True # for parallel env
             self.infos[agent] = {"status": 'winner'}
@@ -324,7 +323,6 @@ class GITCGFlatMiniGymEnv(AECEnv):
         if (self.turn > 15): # end after 15 rounds
             self.terminations[agent] = True 
             self.terminations[other_agent] = True
-            self.done = True
             self.truncations[agent] = True # for parallel env
             self.truncations[other_agent] = True # for parallel env
             self.rewards[agent] -= 10 # small penalty
