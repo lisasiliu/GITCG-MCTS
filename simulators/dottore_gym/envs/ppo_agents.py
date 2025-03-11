@@ -35,14 +35,27 @@ model = PPO(
     tensorboard_log="./ppo_gitcg_tensorboard/"
 )
 
-# Train the model
-model.learn(total_timesteps=10) #100000
+import wandb, pickle
+from wandb.integration.sb3 import WandbCallback
 
-# Save the trained model
+# Initialize a WandB run
+wandb.init(
+    project="gitcg_ppo_training",
+    sync_tensorboard=True,  # Syncs SB3 TensorBoard logs with WandB
+    save_code=True          # Saves the training script in WandB
+)
+
+model.learn(total_timesteps=100000, # 100000
+            callback=WandbCallback(
+            gradient_save_freq=100,
+            model_save_path=f"models/{wandb.run.id}",
+            verbose=1
+        )) 
 model.save("ppo_gitcg_double_mini")
-
-# Load the model for inference
 model = PPO.load("ppo_gitcg_double_mini")
+
+with open('ppo_double_mini_100000_learn.pkl', 'wb') as f:
+    pickle.dump(model, f)
 
 def evaluate(env, model, episodes=5):
     for episode in range(episodes):
@@ -51,6 +64,7 @@ def evaluate(env, model, episodes=5):
         while not done[0] or not done[1]:
             action, _states = model.predict(obs, deterministic=True)
             obs, reward, done, info = env.step(action)
-            print(f"Reward: {reward}, Done: {done}, Info: {info}")
+            print(f"Reward: {reward}, Done: {done}, Info: {info}, Obs: {obs}")
 
 evaluate(env, model)
+
