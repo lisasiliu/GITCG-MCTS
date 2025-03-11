@@ -38,6 +38,7 @@ class GITCGFlatMiniGymEnv(AECEnv):
         self.possible_agents = ["0", "1"] # fixed
         self.agents = ["0", "1"] # current agents
 
+        self._cumulative_rewards = {"0": 0, "1": 0} # for AEC
         self.agent_selection = "0"
         self.terminations = {"0": False, "1": False} # agentID: bool
         self.truncations = {"0": False, "1": False} # agentID: bool
@@ -64,33 +65,6 @@ class GITCGFlatMiniGymEnv(AECEnv):
             agent: spaces.Box(low=0, high=max(11, len(self.actions)), shape=(self.obs_size,), dtype=np.float32)
             for agent in self.agents
         }
-
-        # space definitions
-        # self.obs_space = {
-        #     agent: spaces.Dict({
-        #         "observation": spaces.Dict({
-        #             "Kaeya": spaces.Dict({
-        #                 "max_hp": spaces.Discrete(11),
-        #                 "hp": spaces.Discrete(11),
-        #                 "max_energy": spaces.Discrete(3),
-        #                 "energy": spaces.Discrete(3),
-        #                 "atk_permanent": spaces.Discrete(5),
-        #                 "atk_per_turn_amt": spaces.Discrete(5),
-        #                 "atk_per_turn_used": spaces.Discrete(2),
-        #                 "atk_discount": spaces.Discrete(5),
-        #                 "actions": spaces.MultiDiscrete([len(self.vocab)+1] * 3), # normal / skill / burst
-        #                 "artifact": spaces.Discrete(len(self.vocab)+1),
-        #                 "weapon": spaces.Discrete(len(self.vocab)+1),
-        #                 "full": spaces.Discrete(2)
-        #             }),
-        #             "dice": spaces.Discrete(10),
-        #             "cards": spaces.MultiDiscrete([len(self.vocab)+1] * 5), # 5 cards in hand to start
-        #             "declared_end": spaces.Discrete(2),
-        #         }),
-        #         "action_mask": spaces.MultiBinary(len(self.actions))
-        #     }) 
-        #     for agent in self.agents
-        # }
 
         self.act_space = {
             agent: spaces.Discrete(len(self.actions))
@@ -134,6 +108,7 @@ class GITCGFlatMiniGymEnv(AECEnv):
         return self.act_space[agent]
 
     def reset(self, seed=None, options=None):
+        print("RESETTING GAME")
         self.observation_spaces = {
             agent: {
                 "observation": {
@@ -178,7 +153,12 @@ class GITCGFlatMiniGymEnv(AECEnv):
             for agent in self.agents
         }
 
-        self._cumulative_rewards = {"0": 0, "1": 0} # for AEC
+        self.terminations = {"0": False, "1": False} 
+        self.truncations = {"0": False, "1": False} 
+        self.rewards = {"0": 0, "1": 0}
+
+        self.infos = {"0": {}, "1": {}}
+        self.turn = 1 
 
     def get_action_mask(self, agent):
         # valid - 1, invalid - 0
@@ -213,14 +193,14 @@ class GITCGFlatMiniGymEnv(AECEnv):
             self.agent_selection = self._agent_selector.next()
             return
         
-        # if action == None:
-        #     print("action is", action, "for agent", agent)
-        #     print(self.observation_spaces[agent])
-        #     print(self.observation_spaces[other_agent])
-        #     print("terminations:", self.terminations)
-        #     print("truncations:", self.truncations)
-        #     self.agent_selection = self._agent_selector.next()
-        #     return
+        if action == None:
+            print("action is", action, "for agent", agent)
+            # print(self.observation_spaces[agent])
+            # print(self.observation_spaces[other_agent])
+            # print("terminations:", self.terminations)
+            print("honestly")
+            self.reset()
+            return
 
         total_dmg = 0
         action = self.id_to_word[action+1]

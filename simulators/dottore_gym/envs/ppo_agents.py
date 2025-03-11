@@ -36,7 +36,7 @@ model = PPO(
 )
 
 # Train the model
-model.learn(total_timesteps=100000)
+model.learn(total_timesteps=10) #100000
 
 # Save the trained model
 model.save("ppo_gitcg_double_mini")
@@ -47,8 +47,8 @@ model = PPO.load("ppo_gitcg_double_mini")
 def evaluate(env, model, episodes=5):
     for episode in range(episodes):
         obs = env.reset()
-        done = False
-        while not done:
+        done = [False, False]
+        while not done[0] or not done[1]:
             action, _states = model.predict(obs, deterministic=True)
             obs, reward, done, info = env.step(action)
             print(f"Reward: {reward}, Done: {done}, Info: {info}")
