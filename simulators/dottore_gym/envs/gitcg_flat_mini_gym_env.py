@@ -76,8 +76,8 @@ class GITCGFlatMiniGymEnv(AECEnv):
     def action_validity(self, action, agent): # for debugging
         return self.get_action_mask(agent)[action]
 
-    # def observe(self, agent):
-    #     return self.observation_spaces[agent]
+    def debug_observe(self, agent):
+        return self.observation_spaces[agent]
     def observe(self, agent):
         return self._flatten_observation(agent)
     
