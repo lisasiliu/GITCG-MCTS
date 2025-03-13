@@ -1,4 +1,0 @@
-{
-    "{'num_dice': 0, 'num_cards': 5, 'active_char': null, 'energy_tier': null, 'hp_bucket': null}": "{'action_type': 'CharacterSelectAction', 'char_id': 2}",
-    "{'num_dice': 8, 'num_cards': 5, 'active_char': 'Bennett', 'energy_tier': 'empty', 'hp_bucket': 'high'}": "{'action_type': 'DiceSelectAction'}"
-}
