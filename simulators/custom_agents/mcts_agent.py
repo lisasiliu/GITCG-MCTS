@@ -54,7 +54,7 @@ class MCTSAgent(PlayerAgent):
         while not node.is_terminal:
             # limit to X different actions
             # print(len(node.tried_actions))
-            if len(node.tried_actions) <= 10:
+            if len(node.tried_actions) <= 8:
                 # any unseen actions after the first X 
                 # pretend they don't exist
                 return self.expand(node)
