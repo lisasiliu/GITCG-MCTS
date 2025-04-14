@@ -85,6 +85,12 @@ for i in range(total_games):
     wandb.log({"Rounds": game_state.round})
     for action, count in action_counts.items():
         wandb.log({action: count}, step=i)
+    
+    
+    with open('reg_mcts_1k_bot.pkl', 'wb') as f:
+        print("saved model")
+        pickle.dump(agMCTS, f)
+
 
 end = time.time()
 print(end - start, " seconds taken.")
@@ -106,7 +112,3 @@ for action, count in action_counts.items():
     print(f"{action}: {count} times")
 
 wandb.finish()
-
-with open('reg_mcts_1k_bot.pkl', 'wb') as f:
-    print("saved model")
-    pickle.dump(agMCTS, f)
