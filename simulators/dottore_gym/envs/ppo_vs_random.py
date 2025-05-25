@@ -3,18 +3,20 @@ Testing model (PPO) vs. random moves.
 Running games 100x with each as first (first player advantage).
 Counting invalid moves.
 
-Player 0: Random
-Player 1: MCTS
+Player 0: PPO
+Player 1: Random
 '''
 
 # from gitcg_double_mini_gym_env import GITCGDoubleMiniGymEnv
 from gitcg_flat_mini_gym_env import GITCGFlatMiniGymEnv
+# from gitcg_random_mini_gym_env import GITCGRandomMiniGymEnv
 from stable_baselines3 import PPO
 import numpy as np
 import random, wandb, pickle
 
 # env = GITCGDoubleMiniGymEnv()
 env = GITCGFlatMiniGymEnv()
+# env = GITCGRandomMiniGymEnv()
 env.reset()
 
 step_to_action = {} # action progression
@@ -24,13 +26,15 @@ p1_wins = 0
 total_games = 1000 # per side
 
 try:
-    model = PPO.load("./models/wtb87s1r/model.zip")
+    model = PPO.load("./models/2ks7adh4/model.zip") # flat mini
+    # model = PPO.load("./models/pk051zen/model.zip") # random bad
+    # model = PPO.load("./models/sdgjlg0h/model.zip") # random w -200
     print("loaded existing ppo model")
 except FileNotFoundError:
     print("error!!! no ppo model found")
     quit()
 
-wandb.init(project="ppo-vs-random-test")
+wandb.init(project="ppo-vs-random-random")
 
 for game in range(total_games):
     for agent in env.agent_iter():
@@ -43,7 +47,7 @@ for game in range(total_games):
             # ppo model makes model
             action, _states = model.predict(observation, deterministic=True)
             print("agent", agent, "(ppo) picks action", env.action_name(action))
-            wandb.log({f"P0 Move {env.turn}": action}, step=game) # messy graphs incoming
+            wandb.log({f"PPO Move {env.turn}": action}, step=game) # messy graphs incoming
         else:
             # random moves from valid moveset
             action_mask = env.get_action_mask(agent)
@@ -56,7 +60,7 @@ for game in range(total_games):
             else:
                 print("agent", agent, "(random) picks None")
                 action = None
-            wandb.log({f"P1 Move {env.turn}": action}, step=game) # messy graphs incoming
+            wandb.log({f"Random Move {env.turn}": action}, step=game) # messy graphs incoming
         # print(env.debug_observe(agent))
         if (type(action) == np.ndarray):
             action = action.item()
@@ -67,6 +71,7 @@ for game in range(total_games):
     print("info:", env.infos)
     print("rewards:", env.rewards)
     print("turn number:", env.turn)
+    print("game number:", game)
     if (env.infos['0']['status'] == 'loser'):
         p1_wins += 1
     elif (env.infos['0']['status'] == 'winner'):
@@ -75,8 +80,10 @@ for game in range(total_games):
     wandb.log({"P0 Wins": p0_wins, "P1 Wins": p1_wins}, step=game) # wins
     wandb.log({"P0 Rewards": env.rewards["0"], "P1 Rewards": env.rewards["1"]}, step=game) # rewards
     wandb.log({"Turns": env.turn}, step=game) # turn
-    for action, count in action_counts.items(): # actions per game
-        wandb.log({f"P0 {env.action_name(int(action))}": count["0"], f"P1 {env.action_name(int(action))}": count["1"]}, step=game)
+    # for action, count in action_counts.items(): # actions per game --- why does it keep picking none??
+    #     wandb.log({f"P0 {env.action_name(int(action))}": count["0"], f"P1 {env.action_name(int(action))}": count["1"]}, step=game)
     env.reset()
 env.close()
+print("FINISHED")
+print("P0 wins:", p0_wins, "P1 wins:", p1_wins)
 wandb.finish()

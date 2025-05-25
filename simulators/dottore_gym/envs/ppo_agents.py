@@ -8,10 +8,12 @@ from stable_baselines3.common.vec_env import DummyVecEnv
 from pettingzoo.utils.conversions import aec_to_parallel
 # from gitcg_double_mini_gym_env import GITCGDoubleMiniGymEnv
 from gitcg_flat_mini_gym_env import GITCGFlatMiniGymEnv
+# from gitcg_random_mini_gym_env import GITCGRandomMiniGymEnv
 
 
 def make_env():
     env = GITCGFlatMiniGymEnv()
+    # env = GITCGRandomMiniGymEnv()
     env = wrappers.AssertOutOfBoundsWrapper(env)
     env = wrappers.OrderEnforcingWrapper(env)
     env = aec_to_parallel(env)
@@ -54,8 +56,8 @@ model.learn(total_timesteps=100000, # 100000
 model.save("ppo_gitcg_double_mini")
 model = PPO.load("ppo_gitcg_double_mini")
 
-with open('ppo_double_mini_100000_learn.pkl', 'wb') as f:
-    pickle.dump(model, f)
+# with open('ppo_double_mini_100000_learn.pkl', 'wb') as f:
+#     pickle.dump(model, f)
 
 def evaluate(env, model, episodes=5):
     for episode in range(episodes):
@@ -65,6 +67,13 @@ def evaluate(env, model, episodes=5):
             action, _states = model.predict(obs, deterministic=True)
             obs, reward, done, info = env.step(action)
             print(f"Reward: {reward}, Done: {done}, Info: {info}, Obs: {obs}")
+            # current_agent = env.agent_selection # debug
+            # action_mask = env.get_action_mask(current_agent) # debug
+            # valid_actions = np.where(np.array(action_mask) == 1)[0].tolist()
+            # if (len(valid_actions) > 0): # debug
+            #     print("agent", current_agent, "picks action", env.action_name(action), "out of", len(valid_actions), "actions")
+            # else:
+            #     print("agent", current_agent, "has no valid actions")
 
 evaluate(env, model)
 
