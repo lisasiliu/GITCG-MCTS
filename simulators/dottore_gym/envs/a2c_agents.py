@@ -7,11 +7,13 @@ from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import DummyVecEnv
 from pettingzoo.utils.conversions import aec_to_parallel
 # from gitcg_double_mini_gym_env import GITCGDoubleMiniGymEnv
-from gitcg_flat_mini_gym_env import GITCGFlatMiniGymEnv
+# from gitcg_flat_mini_gym_env import GITCGFlatMiniGymEnv
+from gitcg_random_mini_gym_env import GITCGRandomMiniGymEnv
 
 
 def make_env():
-    env = GITCGFlatMiniGymEnv()
+    # env = GITCGFlatMiniGymEnv()
+    env = GITCGRandomMiniGymEnv()
     env = wrappers.AssertOutOfBoundsWrapper(env)
     env = wrappers.OrderEnforcingWrapper(env)
     env = aec_to_parallel(env)
@@ -49,7 +51,7 @@ model.learn(total_timesteps=100000, # 100000
             model_save_path=f"models/{wandb.run.id}",
             verbose=1
         )) 
-model.save("a2c")
+model.save("a2c_gitcg_double_mini")
 model = A2C.load("a2c_gitcg_double_mini")
 
 def evaluate(env, model, episodes=5):

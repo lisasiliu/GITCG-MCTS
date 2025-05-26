@@ -1,16 +1,16 @@
 '''
-Testing model (PPO) vs. random moves.
+Testing model (A2C) vs. random moves.
 Running games 100x with each as first (first player advantage).
 Counting invalid moves.
 
-Player 0: PPO
+Player 0: A2C
 Player 1: Random
 '''
 
 # from gitcg_double_mini_gym_env import GITCGDoubleMiniGymEnv
 # from gitcg_flat_mini_gym_env import GITCGFlatMiniGymEnv
 from gitcg_random_mini_gym_env import GITCGRandomMiniGymEnv
-from stable_baselines3 import PPO
+from stable_baselines3 import A2C
 import numpy as np
 import random, wandb, pickle
 
@@ -26,14 +26,14 @@ p1_wins = 0
 total_games = 1000 # per side
 
 try:
-    # model = PPO.load("./models/ppo_flat_100k/model.zip") # flat mini - 2ks7adh4
-    model = PPO.load("./models/ppo_random_100k/model.zip") # random - 0gf70gch
-    print("loaded existing ppo model")
+    # model = A2C.load("./models/a2c_flat_100k/model.zip") # flat mini - 8hii4hn4
+    model = A2C.load("./models/a2c_random_100k/model.zip") # random - ndumnsk1
+    print("loaded existing a2c model")
 except FileNotFoundError:
-    print("error!!! no ppo model found")
+    print("error!!! no a2c model found")
     quit()
 
-wandb.init(project="ppo-vs-random-random")
+wandb.init(project="a2c-vs-random-random")
 
 for game in range(total_games):
     for agent in env.agent_iter():
@@ -43,10 +43,10 @@ for game in range(total_games):
             # print("TERMIANTE")
             break
         elif agent == "0": # TODO change this to switch the first player
-            # ppo model makes model
+            # a2c model makes model
             action, _states = model.predict(observation, deterministic=True)
-            print("agent", agent, "(ppo) picks action", env.action_name(action))
-            wandb.log({f"PPO Move {env.turn}": action}, step=game) # messy graphs incoming
+            print("agent", agent, "(a2c) picks action", env.action_name(action))
+            wandb.log({f"A2C Move {env.turn}": action}, step=game) # messy graphs incoming
         else:
             # random moves from valid moveset
             action_mask = env.get_action_mask(agent)

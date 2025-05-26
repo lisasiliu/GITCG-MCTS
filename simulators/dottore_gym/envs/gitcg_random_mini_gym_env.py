@@ -183,7 +183,7 @@ class GITCGRandomMiniGymEnv(AECEnv):
                 continue # current character is dead
             if self.observation_spaces[agent]["observation"]["declared_end"]:
                 continue # need to end round after end
-            if "card_type" in action and self.word_to_id[action] not in self.observation_spaces[agent]["observation"]["cards"]:
+            if "card_type" in self.actions[action].keys() and self.word_to_id[action] not in self.observation_spaces[agent]["observation"]["cards"]:
                 continue  # card not in hand
             # not enough dice --
             tmp_used_discount = 0
@@ -205,7 +205,7 @@ class GITCGRandomMiniGymEnv(AECEnv):
             # ------------------
             if action.__contains__("burst") and self.observation_spaces[agent]["observation"]["Kaeya"]["max_energy"] != self.observation_spaces[agent]["observation"]["Kaeya"]["energy"]:
                 continue # not enough energy
-            if "hp" in action and self.observation_spaces[agent]["observation"]["Kaeya"]["full"]:
+            if "hp" in self.actions[action].keys() and self.observation_spaces[agent]["observation"]["Kaeya"]["full"]:
                 continue # full, can't eat more
             mask[self.word_to_id[action] - 1] = 1 # valid otherwise
         return mask
@@ -242,9 +242,9 @@ class GITCGRandomMiniGymEnv(AECEnv):
 
         # check if action is valid?
         if self.get_action_mask(agent)[self.word_to_id[action]-1] == 0:
-            self.rewards[agent] -= 100 # invalid
+            self.rewards[agent] -= 10 # invalid
             self._cumulative_rewards[agent] += self.rewards[agent]
-            print("agent", agent, "gets -100 reward for invalid action")
+            print("agent", agent, "gets -10 reward for invalid action")
             action = "end_round_action"
 
         # subtract dice
@@ -275,7 +275,11 @@ class GITCGRandomMiniGymEnv(AECEnv):
         if action == "end_round_action":
             self.observation_spaces[agent]["observation"]["declared_end"] = 1
             print("agent", agent, "declares end round")
+            if (len(self.observation_spaces[agent]["observation"]["dice"]) >= self.dice_per_turn): # didn't use any dice ?
+                self.rewards[agent] -= 100 # big penalty
+                print("agent", agent, "gets -100 reward for early end round")
         elif "card_type" not in self.actions[action]: # character atk
+            self.rewards[agent] += 10 # reward for attacking!
             atk = self.actions[action]["dmg"]
             atk += self.observation_spaces[agent]["observation"]["Kaeya"]["atk_permanent"] 
             
@@ -300,6 +304,7 @@ class GITCGRandomMiniGymEnv(AECEnv):
                 self.observation_spaces[other_agent]["observation"]["Kaeya"]["hp"] = 0
             # print("ATK!!", self.observation_spaces[other_agent]["observation"]["Kaeya"]["hp"] + total_dmg, "->", self.observation_spaces[other_agent]["observation"]["Kaeya"]["hp"])
         else:
+            self.rewards[agent] += 5 # reward for doing something
             self.observation_spaces[agent]["observation"]["cards"] = np.delete(self.observation_spaces[agent]["observation"]["cards"], np.where(self.observation_spaces[agent]["observation"]["cards"] == self.word_to_id[action])[0][0]) if np.any(self.observation_spaces[agent]["observation"]["cards"] == self.word_to_id[action]) else self.observation_spaces[agent]["observation"]["cards"]
             if (len(self.observation_spaces[agent]["observation"]["cards"]) < 5):
                 self.observation_spaces[agent]["observation"]["cards"] = np.append(self.observation_spaces[agent]["observation"]["cards"], 0) # filler for env to retain same size
