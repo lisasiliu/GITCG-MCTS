@@ -4,12 +4,14 @@ Running games with valid actions only.
 '''
 
 # from gitcg_double_mini_gym_env import GITCGDoubleMiniGymEnv
-from gitcg_flat_mini_gym_env import GITCGFlatMiniGymEnv
+# from gitcg_flat_mini_gym_env import GITCGFlatMiniGymEnv
+from gitcg_random_mini_gym_env import GITCGRandomMiniGymEnv
 import numpy as np
 import random
 
 # env = GITCGDoubleMiniGymEnv()
-env = GITCGFlatMiniGymEnv()
+# env = GITCGFlatMiniGymEnv()
+env = GITCGRandomMiniGymEnv()
 env.reset()
 
 for agent in env.agent_iter():
@@ -23,7 +25,7 @@ for agent in env.agent_iter():
         valid_actions = np.where(np.array(action_mask) == 1)[0].tolist()
         if (len(valid_actions) > 0):
             action = random.choice(valid_actions)
-            print("agent", agent, "picks action", env.action_name(action))
+            print("agent", agent, "picks action", env.action_name(action), "out of", len(valid_actions), "actions")
         else:
             action = None
 

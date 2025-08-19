@@ -1,4 +1,12 @@
 __pycache__/
+.vscode/
 *.egg-info
 *.log
 wandb/
+models/
+runs/
+*.pkl
+__obsolete/
+training_a2c/
+training_dqn/
+training_ppo/

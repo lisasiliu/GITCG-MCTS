@@ -17,7 +17,7 @@ wandb.init(project="dgisim-regular-mcts")
 
 p1_wins = 0
 p2_wins = 0
-total_games = 1
+total_games = 50
 
 action_counts = {} # action tracker
 
