@@ -3,7 +3,7 @@ from gymnasium import spaces
 from pettingzoo import AECEnv
 from pettingzoo.utils import agent_selector, wrappers
 import numpy as np
-import pickle, random
+import random
 
 '''
 Randomized Mini GITCG Setup:

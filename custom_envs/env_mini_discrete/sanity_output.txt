@@ -1,0 +1,32 @@
+Running 100 random self-play sanity games...
+Results: {'games': 100, 'p0_win_rate': 0.49, 'p1_win_rate': 0.51, 'tie_rate': 0.0, 'raw_counts': {'1': 51, '0': 49}}
+
+Running one verbose game to eyeball actions...
+Round 1  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, sweet, | DE s=1 o=0
+Round 1  | Agent 1 | kaeya_skill        | HP s=10 o= 7 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=1
+Round 1  | Agent 1 | end_round_action   | HP s=10 o= 7 | Dice  1->4  | Hand: [broke, hash_, sweet, sweet, | DE s=1 o=1 | ADV→R2
+Round 2  | Agent 0 | sweet_madame       | HP s= 8 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 2  | Agent 1 | kaeya_normal       | HP s=10 o= 6 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 2  | Agent 0 | kaeya_normal       | HP s= 6 o= 8 | Dice  4->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 2  | Agent 0 | end_round_action   | HP s= 6 o= 8 | Dice  1->4  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=1 | ADV→R3
+Round 3  | Agent 1 | hash_brown         | HP s=10 o= 6 | Dice  4->3  | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=0
+Round 3  | Agent 0 | skyward_blade      | HP s= 6 o=10 | Dice  4->1  | Hand: [broke, hash_, sweet]        | DE s=0 o=0
+Round 3  | Agent 1 | kaeya_normal       | HP s=10 o= 4 | Dice  3->0  | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=0
+Round 3  | Agent 0 | sweet_madame       | HP s= 5 o=10 | Dice  1->1  | Hand: [broke, hash_]               | DE s=0 o=0
+Round 3  | Agent 1 | end_round_action   | HP s=10 o= 5 | Dice  0->0  | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=0
+Round 3  | Agent 0 | end_round_action   | HP s= 5 o=10 | Dice  1->4  | Hand: [broke, hash_]               | DE s=1 o=1 | ADV→R4
+Round 4  | Agent 1 | end_round_action   | HP s=10 o= 5 | Dice  4->4  | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=0
+Round 4  | Agent 0 | hash_brown         | HP s= 7 o=10 | Dice  4->3  | Hand: [broke]                      | DE s=0 o=1
+Round 4  | Agent 0 | broken_rimes_echo  | HP s= 7 o=10 | Dice  3->1  | Hand: []                           | DE s=0 o=1
+Round 4  | Agent 0 | end_round_action   | HP s= 7 o=10 | Dice  1->4  | Hand: []                           | DE s=1 o=1 | ADV→R5
+Round 5  | Agent 1 | sweet_madame       | HP s=10 o= 7 | Dice  4->4  | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 5  | Agent 1 | skyward_blade      | HP s=10 o= 7 | Dice  4->1  | Hand: [broke, sweet]               | DE s=0 o=1
+Round 5  | Agent 1 | end_round_action   | HP s=10 o= 7 | Dice  1->4  | Hand: [broke, sweet]               | DE s=1 o=1 | ADV→R6
+Round 6  | Agent 0 | kaeya_normal       | HP s= 7 o= 6 | Dice  4->2  | Hand: []                           | DE s=0 o=0
+Round 6  | Agent 1 | broken_rimes_echo  | HP s= 6 o= 7 | Dice  4->2  | Hand: [sweet]                      | DE s=0 o=0
+Round 6  | Agent 0 | end_round_action   | HP s= 7 o= 6 | Dice  2->2  | Hand: []                           | DE s=1 o=0
+Round 6  | Agent 1 | kaeya_normal       | HP s= 6 o= 3 | Dice  2->0  | Hand: [sweet]                      | DE s=0 o=1
+Round 6  | Agent 1 | end_round_action   | HP s= 6 o= 3 | Dice  0->4  | Hand: [sweet]                      | DE s=1 o=1 | ADV→R7
+Round 7  | Agent 0 | kaeya_burst        | HP s= 3 o= 1 | Dice  4->2  | Hand: []                           | DE s=0 o=0
+Round 7  | Agent 0 | kaeya_normal       | HP s= 3 o= 0 | Dice  2->0  | Hand: []                           | DE s=0 o=1
+Done.

@@ -19,8 +19,6 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
         "is_parallelizable": True,
     }
     render_mode = "human"
-
-    # Action catalogue (8 discrete)
     actions = {
         "kaeya_normal": {"dmg": 2, "dice_cost": 3, "energy": 1},
         "kaeya_skill": {"dmg": 3, "dice_cost": 3, "energy": 1},
@@ -36,39 +34,30 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
         super().__init__()
 
         # AEC variables
-        self.possible_agents = ["0", "1"]
-        self.agents = ["0", "1"]
+        self.possible_agents = ["0", "1"]                   # fixed
+        self.agents = ["0", "1"]                            # current agents
         self._cumulative_rewards = {"0": 0.0, "1": 0.0}
         self.agent_selection = "0"
-        self.terminations = {"0": False, "1": False}
+        self.terminations = {"0": False, "1": False}       
         self.truncations = {"0": False, "1": False}
         self.rewards = {"0": 0.0, "1": 0.0}
-        self.infos = {"0": {}, "1": {}}
+        self.infos = {"0": {}, "1": {}}                     # agentID: dict[str, Any]
 
-        # Vocab for mapping Discrete->action name
-        self.vocab = [
-            "broken_rimes_echo",
-            "hash_brown",
-            "sweet_madame",
-            "skyward_blade",
-            "kaeya_normal",
-            "kaeya_skill",
-            "kaeya_burst",
-            "end_round_action",
-        ]
+        # custom variables
+        self.vocab = ["broken_rimes_echo", "hash_brown", "sweet_madame", "skyward_blade", "kaeya_normal", "kaeya_skill", "kaeya_burst", "end_round_action"]
         self.word_to_id = {word: idx for idx, word in enumerate(self.vocab, start=1)}
         self.id_to_word = {idx: word for word, idx in self.word_to_id.items()}
 
         self.turn = 1
         self.dice_per_turn = 4
 
-        # === Observation/Action space definitions ===
+        # ---- observation space definition -------------------------------------------------
         # 14: [max_hp, hp, max_energy, energy, atk_perm, atk_per_turn_amt, atk_per_turn_used,
         #      atk_discount, actions[3], artifact, weapon, full]
         # 7:  [dice, cards[5], declared_end]
         # + action mask (len(actions)=8)
         self.obs_size = 14 + 7 + len(self.actions)  # 29
-        self.observation_spaces = {
+        self.observation_spaces = {                         # agentID: space
             agent: spaces.Box(
                 low=0,
                 high=max(11, len(self.actions)),
@@ -77,23 +66,19 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
             )
             for agent in self.agents
         }
-        self.action_spaces = {
+        # ---- action space definition ------------------------------------------------------
+        self.action_spaces = {                              # agentID: space
             agent: spaces.Discrete(len(self.actions)) for agent in self.agents
-        }
+        } 
 
         # Internal per-agent state (separate from PettingZoo *.observation_spaces)
         self.state = {}
 
-    # --------- Helpers ---------
+    # --------- helper functions for debugging ----------------------------------------------
     def action_name(self, action: int) -> str:
         return self.id_to_word[action + 1]
-
     def action_validity(self, action: int, agent: str) -> int:
         return self.get_action_mask(agent)[action]
-
-    def observe(self, agent: str):
-        return self._flatten_observation(agent)
-
     def debug_observe(self, agent: str):
         return self.state[agent]
 
@@ -104,7 +89,6 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
             discount = self.state[agent]["observation"]["Kaeya"]["atk_discount"]
             return max(0, base - int(discount))
         return base
-
     def _flatten_observation(self, agent: str):
         kaeya = self.state[agent]["observation"]["Kaeya"]
         obs = self.state[agent]["observation"]
@@ -147,19 +131,23 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
         )
         return flat_obs.astype(np.float32)
 
+    # --------- helper functions for gym env -------------------------------------------------
+    def observe(self, agent: str):
+        return self._flatten_observation(agent)
+        
     def last(self, observe=True):
         agent = self.agent_selection
         if observe is False:
             return (
                 None,
-                self.rewards[agent],
+                self._cumulative_rewards[agent],
                 self.terminations[agent],
                 self.truncations[agent],
                 self.infos[agent],
             )
         return (
             self._flatten_observation(agent),
-            self.rewards[agent],
+            self._cumulative_rewards[agent],
             self.terminations[agent],
             self.truncations[agent],
             self.infos[agent],
@@ -172,7 +160,12 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
         return self.action_spaces[agent]
 
     def reset(self, seed=None, options=None):
-        # Deterministic initial state
+        # reset agents
+        self.agents = self.possible_agents[:]
+        self._agent_selector = agent_selector(self.agents)
+        self.agent_selection = self._agent_selector.next()
+        
+        # initial state
         self.state = {
             agent: {
                 "observation": {
@@ -185,39 +178,31 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
                         "atk_per_turn_amt": 0,
                         "atk_per_turn_used": 0,
                         "atk_discount": 0,
-                        "actions": np.array(
-                            [
-                                self.word_to_id["kaeya_normal"],
-                                self.word_to_id["kaeya_skill"],
-                                self.word_to_id["kaeya_burst"],
-                            ],
-                            dtype=np.int8,
-                        ),
-                        "artifact": 0,
-                        "weapon": 0,
-                        "full": 0,
+                        "actions": np.array([
+                            self.word_to_id["kaeya_normal"],
+                            self.word_to_id["kaeya_skill"],
+                            self.word_to_id["kaeya_burst"],
+                        ], dtype=np.int8),
+                        "artifact": 0,          # None
+                        "weapon": 0,            # None
+                        "full": 0,              # False
                     },
                     "dice": self.dice_per_turn,
-                    "cards": np.array(
-                        [
-                            self.word_to_id["broken_rimes_echo"],
-                            self.word_to_id["hash_brown"],
-                            self.word_to_id["sweet_madame"],
-                            self.word_to_id["sweet_madame"],
-                            self.word_to_id["skyward_blade"],
-                        ],
-                        dtype=np.int8,
-                    ),
+                    "cards": np.array([
+                        self.word_to_id["broken_rimes_echo"],
+                        self.word_to_id["hash_brown"],
+                        self.word_to_id["sweet_madame"],
+                        self.word_to_id["sweet_madame"],
+                        self.word_to_id["skyward_blade"],
+                    ], dtype=np.int8),
                     "declared_end": int(False),
-                }
+                },
+                "action_mask": np.array([1] * len(self.actions), dtype=np.int8)
             }
             for agent in self.agents
         }
 
-        self._agent_selector = agent_selector(self.agents)
-        self.agent_selection = self._agent_selector.next()
-
-        # Reset core AEC variables
+        self._cumulative_rewards = {"0": 0.0, "1": 0.0}
         self.terminations = {"0": False, "1": False}
         self.truncations = {"0": False, "1": False}
         self.rewards = {"0": 0.0, "1": 0.0}
@@ -229,61 +214,47 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
         mask = [0] * len(self.actions)
         obs = self.state[agent]["observation"]
         kaeya = obs["Kaeya"]
-
         for action_word, value in self.actions.items():
-            # if already declared end, you must skip (env enforces skip on your turn)
             if obs["declared_end"]:
-                continue
-
-            # cannot act with dead character
+                continue # need to end round after end (env requires an action every turn)
             if action_word.startswith("kaeya_") and kaeya["hp"] <= 0:
-                continue
-
-            # require card in hand
+                continue # current character is dead
             if "card_type" in value and self.word_to_id[action_word] not in obs["cards"]:
-                continue
-
-            # dice check (apply discount only to character attacks)
+                continue # card not in hand
             eff_cost = self._effective_dice_cost(action_word, agent)
             if eff_cost > obs["dice"]:
-                continue
-
-            # burst needs full energy
+                continue # not enough dice (apply discount only to character attacks)
             if "burst" in action_word and kaeya["energy"] != kaeya["max_energy"]:
-                continue
-
-            # cannot eat when full
+                continue # not enough energy for burst
             if "hp" in value and kaeya["full"]:
-                continue
-
-            mask[self.word_to_id[action_word] - 1] = 1
+                continue # full, can't eat more
+            mask[self.word_to_id[action_word] - 1] = 1 # valid otherwise
         return mask
 
     def step(self, action: int):
         agent = self.agent_selection
         other_agent = "0" if agent == "1" else "1"
-
-        # If player has already declared end, skip their turn
+        if self.terminations[agent] or self.truncations[agent]:
+            self._was_dead_step(None)
+            return
+        # if player has already declared end, skip their turn
         if self.state[agent]["observation"]["declared_end"] == 1:
             self.agent_selection = self._agent_selector.next()
             return
-
-        # Treat None as "pass/end" (no-op action provided by some libraries)
+        # treat None as "pass/end" (no-op action provided by some libraries)
         if action is None:
             action_word = "end_round_action"
         else:
             action_word = self.id_to_word[action + 1]
-
-        # Validate against mask
+        # validate against mask
         if self.get_action_mask(agent)[self.word_to_id[action_word] - 1] == 0:
             self.rewards[agent] -= 10  # invalid -> penalize and convert to end turn
             action_word = "end_round_action"
-
-        # Spend dice (apply discount correctly)
+        # spend dice (apply discount correctly)
         eff_cost = self._effective_dice_cost(action_word, agent)
         self.state[agent]["observation"]["dice"] -= eff_cost
         if self.state[agent]["observation"]["dice"] < 0:
-            # Should not happen if mask worked; clamp and continue
+            # should not happen if mask worked; clamp and continue
             self.state[agent]["observation"]["dice"] = 0
 
         total_dmg = 0
@@ -363,20 +334,19 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
             self.rewards[agent] += total_dmg + self.state[agent]["observation"]["Kaeya"]["hp"]
             self._cumulative_rewards[agent] += self.rewards[agent]
 
-        # Win condition
+        # win condition - kills opponent
         if self.state[other_agent]["observation"]["Kaeya"]["hp"] <= 0:
-            self.rewards[agent] += 100
+            self.rewards[agent] += 100              # big reward
+            self.rewards[other_agent] -= 100        # big reward
             self._cumulative_rewards[agent] += self.rewards[agent]
-            self.terminations[agent] = True
-            self.terminations[other_agent] = True
-            self.truncations[agent] = True
-            self.truncations[other_agent] = True
+            self._cumulative_rewards[other_agent] += self.rewards[other_agent]
             self.infos[agent] = {"status": "winner"}
             self.infos[other_agent] = {"status": "loser"}
-            self.agent_selection = self._agent_selector.next()
-            return
+            self.terminations[agent] = True
+            self.terminations[other_agent] = True
+            # return
 
-        # Round transition: both must declare end
+        # round transition if both have declared end
         if (
             self.state[agent]["observation"]["declared_end"]
             and self.state[other_agent]["observation"]["declared_end"]
@@ -388,22 +358,19 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
                 self.state[p]["observation"]["dice"] = self.dice_per_turn
             self.turn += 1
 
-        # Hard cap to avoid infinite episodes
+        # end after 15 rounds
         if self.turn > 15:
-            self.terminations[agent] = True
-            self.terminations[other_agent] = True
-            self.truncations[agent] = True
-            self.truncations[other_agent] = True
             self.rewards[agent] -= 10
             self.rewards[other_agent] -= 10
             self._cumulative_rewards[agent] += self.rewards[agent]
             self._cumulative_rewards[other_agent] += self.rewards[other_agent]
             self.infos[agent] = {"status": "tie"}
             self.infos[other_agent] = {"status": "tie"}
-            self.agent_selection = self._agent_selector.next()
-            return
+            self.terminations[agent] = True
+            self.terminations[other_agent] = True
+            # return
 
-        # Next player
+        # switch player for the next step
         self.agent_selection = self._agent_selector.next()
 
     def close(self):
