@@ -1,8 +1,7 @@
 import random
 from collections import Counter
 import numpy as np
-from env_mini_discrete.env_mini_discrete import GITCGDiscreteMiniGymEnv as GymEnv
-
+from env_mini_random.env_mini_random import GITCGRandomMiniGymEnv as GymEnv
 
 # ----------- Pretty print helper functions --------------------------------------
 
@@ -21,20 +20,30 @@ def hand_str(env, agent, token_width: int = 5, list_width: int = 28) -> str:
         s = s[:list_width]
     return s
 
+def dice_str(dice_nums):
+    '''
+    List of dice numbers. This will be converted to a string list.
+    Empty (0) dice are skipped.
+    Example: [7 3 0 0] -> [cryo anemo]
+    '''
+    dice_type = ["hydro", "pyro", "anemo", "geo", "dendro", "electro", "cryo", "omni"]
+    dice_to_id = {word: idx for idx, word in enumerate(dice_type, start=1)}
+    id_to_dice = {idx: word for word, idx in dice_to_id.items()}
+    return '[' + ' '.join([id_to_dice[d] for d in dice_nums if d != 0]) + ']'
+
 def _fmt_step_line(round_no, agent, action_word, hp_self, hp_opp,
-                   dice_before, dice_after, hand_fixed, de_self, de_opp):
+                   dice_before, dice_after, dice_before_actual, dice_after_actual, hand_fixed, de_self, de_opp):
     '''
     Formatting each step line.
     Example: Round 4  | Agent 0 | hash_brown         | HP s= 7 o=10 | Dice  4->3  | Hand: [broke]   
     '''
     # Choose fixed widths so '|' columns align nicely.
-    # Tune widths here if you want more/less room.
     return (
         f"Round {round_no:<2} | "
         f"Agent {agent} | "
         f"{action_word:<18} | "               # action column (16 chars)
         f"HP s={hp_self:>2} o={hp_opp:>2} | " # hp column
-        f"Dice {dice_before:>2}->{dice_after:<2} | "
+        f"Dice {dice_before:>2}->{dice_after:<2} -- {dice_str(dice_before_actual) + "->" + dice_str(dice_after_actual):<60}| "
         f"Hand: {hand_fixed} | "
         f"DE s={de_self} o={de_opp}"
     )
@@ -81,7 +90,7 @@ def _winner_from_env(env) -> str:
 
 
 # ---------- Core: play one game (policy vs valid-random) and optionally pretty print ----------
-def play_one_game(model, side="0", deterministic=True, seed=None, verbose=False, masked = False):
+def play_one_game(model, side="0", deterministic=True, seed=None, verbose=False, masked=False):
     """
     Plays a single AEC game: SB3 policy on `side` ('0' or '1') vs valid-random opponent.
     If `verbose`, pretty prints each (first) end-round action + every non-end action.
@@ -167,8 +176,10 @@ def play_one_game(model, side="0", deterministic=True, seed=None, verbose=False,
                 action_word=action_word,
                 hp_self=kaeya(agent)["hp"],
                 hp_opp=kaeya(opp)["hp"],
-                dice_before=dice_before,
-                dice_after=dice(agent),
+                dice_before=sum(d != 0 for d in dice_before),   # count of usable dice before
+                dice_after=sum(d != 0 for d in dice(agent)),    # count of usable dice after
+                dice_before_actual = dice_before,
+                dice_after_actual = dice(agent), 
                 hand_fixed=hand_fixed,
                 de_self=log_de_self,
                 de_opp=log_de_opp,

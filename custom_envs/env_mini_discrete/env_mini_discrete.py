@@ -15,7 +15,7 @@ Mini (Flattened) GITCG Setup (deterministic):
 class GITCGDiscreteMiniGymEnv(AECEnv):
     metadata = {
         "render_modes": ["human"],
-        "name": "GITCGFlatMiniGymEnv",
+        "name": "GITCGDiscreteMiniGymEnv",
         "is_parallelizable": True,
     }
     render_mode = "human"
@@ -70,8 +70,7 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
         self.action_spaces = {                              # agentID: space
             agent: spaces.Discrete(len(self.actions)) for agent in self.agents
         } 
-
-        # Internal per-agent state (separate from PettingZoo *.observation_spaces)
+        # internal per-agent state (separate from PettingZoo *.observation_spaces)
         self.state = {}
 
     # --------- helper functions for debugging ----------------------------------------------
@@ -81,6 +80,12 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
         return self.get_action_mask(agent)[action]
     def debug_observe(self, agent: str):
         return self.state[agent]
+
+    # for masked ppo
+    def action_masks(self):
+        # return valid action mask for the current agent as a boolean array
+        agent = self.agent_selection
+        return self.valid_action_mask(agent).astype(bool)
 
     def _effective_dice_cost(self, action_word: str, agent: str) -> int:
         """Apply Kaeya's atk_discount only to character attacks."""
@@ -259,7 +264,7 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
 
         total_dmg = 0
 
-        # --- Apply action ---
+        # --- apply action ---
         if action_word == "end_round_action":
             self.state[agent]["observation"]["declared_end"] = 1
             # penalty for ending without using any dice that turn
@@ -267,7 +272,7 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
                 self.rewards[agent] -= 100
 
         elif "card_type" not in self.actions[action_word]:
-            # Character attack
+            # character attack
             self.rewards[agent] += 10
             atk = self.actions[action_word]["dmg"]
             atk += self.state[agent]["observation"]["Kaeya"]["atk_permanent"]
@@ -280,25 +285,25 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
 
             total_dmg = atk
 
-            # Energy handling
+            # energy handling
             if "energy" in self.actions[action_word]:
                 self.state[agent]["observation"]["Kaeya"]["energy"] += self.actions[action_word]["energy"]
                 max_e = self.state[agent]["observation"]["Kaeya"]["max_energy"]
                 if self.state[agent]["observation"]["Kaeya"]["energy"] > max_e:
                     self.state[agent]["observation"]["Kaeya"]["energy"] = max_e
             elif self.state[agent]["observation"]["Kaeya"]["energy"] == self.state[agent]["observation"]["Kaeya"]["max_energy"]:
-                # Using burst consumes energy
+                # using burst consumes energy
                 self.state[agent]["observation"]["Kaeya"]["energy"] = 0
 
-            # Deal damage
+            # deal damage
             self.state[other_agent]["observation"]["Kaeya"]["hp"] -= total_dmg
             if self.state[other_agent]["observation"]["Kaeya"]["hp"] < 0:
                 self.state[other_agent]["observation"]["Kaeya"]["hp"] = 0
 
         else:
-            # Support card played
+            # support card played
             self.rewards[agent] += 5
-            # Remove the card from hand (keep fixed size with trailing 0)
+            # remove the card from hand (keep fixed size with trailing 0)
             cards = self.state[agent]["observation"]["cards"]
             w_id = self.word_to_id[action_word]
             if np.any(cards == w_id):
@@ -308,7 +313,7 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
                 cards = np.append(cards, 0)
             self.state[agent]["observation"]["cards"] = cards
 
-            # Apply effects
+            # apply effects
             if "hp" in self.actions[action_word]:
                 cur_hp = self.state[agent]["observation"]["Kaeya"]["hp"]
                 cur_hp += self.actions[action_word]["hp"]
@@ -329,17 +334,14 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
             if self.actions[action_word].get("card_type") == "weapon":
                 self.state[agent]["observation"]["Kaeya"]["weapon"] = w_id
 
-        # Shaping reward: attack damage + retain HP
+        # shaping reward: attack damage + retain HP
         if action_word in ["kaeya_normal", "kaeya_skill", "kaeya_burst"]:
             self.rewards[agent] += total_dmg + self.state[agent]["observation"]["Kaeya"]["hp"]
-            self._cumulative_rewards[agent] += self.rewards[agent]
 
         # win condition - kills opponent
         if self.state[other_agent]["observation"]["Kaeya"]["hp"] <= 0:
             self.rewards[agent] += 100              # big reward
-            self.rewards[other_agent] -= 100        # big reward
-            self._cumulative_rewards[agent] += self.rewards[agent]
-            self._cumulative_rewards[other_agent] += self.rewards[other_agent]
+            self.rewards[other_agent] -= 100        # big loss
             self.infos[agent] = {"status": "winner"}
             self.infos[other_agent] = {"status": "loser"}
             self.terminations[agent] = True
@@ -362,13 +364,16 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
         if self.turn > 15:
             self.rewards[agent] -= 10
             self.rewards[other_agent] -= 10
-            self._cumulative_rewards[agent] += self.rewards[agent]
-            self._cumulative_rewards[other_agent] += self.rewards[other_agent]
             self.infos[agent] = {"status": "tie"}
             self.infos[other_agent] = {"status": "tie"}
             self.terminations[agent] = True
             self.terminations[other_agent] = True
             # return
+
+        # accumulate rewards
+        cumulative_multiplier = 0.0003 # scale rewards to be smaller
+        self._cumulative_rewards[agent] += self.rewards[agent] * cumulative_multiplier
+        self._cumulative_rewards[other_agent] += self.rewards[other_agent] * cumulative_multiplier
 
         # switch player for the next step
         self.agent_selection = self._agent_selector.next()

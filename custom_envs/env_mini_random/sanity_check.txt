@@ -1,0 +1,42 @@
+Running 100 random self-play sanity games...
+Results: {'games': 100, 'p0_win_rate': 0.12, 'p1_win_rate': 0.11, 'tie_rate': 0.77, 'raw_counts': {'tie': 77, '0': 12, '1': 11}}
+
+Running one verbose game to eyeball actions...
+Round 1  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, sweet, | DE s=1 o=0
+Round 1  | Agent 1 | sweet_madame       | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=1
+Round 1  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=1 | ADV→R2
+Round 2  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, sweet, | DE s=1 o=0
+Round 2  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=1 | ADV→R3
+Round 3  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, sweet, | DE s=1 o=0
+Round 3  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=1 | ADV→R4
+Round 4  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, sweet, | DE s=1 o=0
+Round 4  | Agent 1 | sweet_madame       | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, skywa]        | DE s=0 o=1
+Round 4  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, skywa]        | DE s=1 o=1 | ADV→R5
+Round 5  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, sweet, | DE s=1 o=0
+Round 5  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, skywa]        | DE s=1 o=1 | ADV→R6
+Round 6  | Agent 0 | sweet_madame       | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 6  | Agent 1 | hash_brown         | HP s=10 o=10 | Dice  3->3  | Hand: [broke, skywa]               | DE s=0 o=0
+Round 6  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=0
+Round 6  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  3->4  | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R7
+Round 7  | Agent 0 | hash_brown         | HP s=10 o=10 | Dice  3->3  | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 7  | Agent 1 | broken_rimes_echo  | HP s=10 o=10 | Dice  2->2  | Hand: [skywa]                      | DE s=0 o=0
+Round 7  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  3->3  | Hand: [broke, sweet, skywa]        | DE s=1 o=0
+Round 7  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  2->4  | Hand: [skywa]                      | DE s=1 o=1 | ADV→R8
+Round 8  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, sweet, skywa]        | DE s=1 o=0
+Round 8  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [skywa]                      | DE s=1 o=1 | ADV→R9
+Round 9  | Agent 0 | sweet_madame       | HP s=10 o=10 | Dice  4->4  | Hand: [broke, skywa]               | DE s=0 o=0
+Round 9  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R10
+Round 10 | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [skywa]                      | DE s=1 o=0
+Round 10 | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R11
+Round 11 | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [skywa]                      | DE s=1 o=0
+Round 11 | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R12
+Round 12 | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [skywa]                      | DE s=1 o=0
+Round 12 | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R13
+Round 13 | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [skywa]                      | DE s=1 o=0
+Round 13 | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R14
+Round 14 | Agent 1 | kaeya_skill        | HP s=10 o= 7 | Dice  2->2  | Hand: [skywa]                      | DE s=0 o=0
+Round 14 | Agent 1 | end_round_action   | HP s=10 o= 7 | Dice  2->4  | Hand: [skywa]                      | DE s=1 o=1 | ADV→R15
+Round 15 | Agent 0 | broken_rimes_echo  | HP s= 7 o=10 | Dice  2->2  | Hand: [skywa]                      | DE s=0 o=0
+Round 15 | Agent 0 | kaeya_normal       | HP s= 7 o= 8 | Dice  0->0  | Hand: [skywa]                      | DE s=0 o=1
+Round 15 | Agent 0 | end_round_action   | HP s= 7 o= 8 | Dice  0->4  | Hand: [skywa]                      | DE s=1 o=1 | ADV→R16
+Done.

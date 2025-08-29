@@ -1,0 +1,173 @@
+--- Discrete: Unmasked PPO vs. Masked random ------------------
+Printing win stats as side 0
+games: 1000
+sb3_player: 0
+p0_win_rate: 0.769
+p1_win_rate: 0.231
+tie_rate: 0.0
+win_rate_sb3: 0.769
+win_rate_rand: 0.231
+raw_counts: {'0': 769, '1': 231}
+
+Printing win stats as side 1
+games: 1000
+sb3_player: 1
+p0_win_rate: 0.153
+p1_win_rate: 0.847
+tie_rate: 0.0
+win_rate_sb3: 0.847
+win_rate_rand: 0.153
+raw_counts: {'0': 153, '1': 847}
+
+Starting game where PPO is 0
+Round 1  | Agent 0 | kaeya_skill        | HP s=10 o= 7 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 1  | Agent 1 | sweet_madame       | HP s= 8 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 1  | Agent 0 | end_round_action   | HP s=10 o= 8 | Dice  1->1  | Hand: [broke, hash_, sweet, sweet, | DE s=1 o=0
+Round 1  | Agent 1 | broken_rimes_echo  | HP s= 8 o=10 | Dice  4->2  | Hand: [hash_, sweet, skywa]        | DE s=0 o=1
+Round 1  | Agent 1 | kaeya_normal       | HP s= 8 o= 8 | Dice  2->0  | Hand: [hash_, sweet, skywa]        | DE s=0 o=1
+Round 1  | Agent 1 | end_round_action   | HP s= 8 o= 8 | Dice  0->4  | Hand: [hash_, sweet, skywa]        | DE s=1 o=1 | ADV→R2
+Round 2  | Agent 0 | kaeya_skill        | HP s= 8 o= 5 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 2  | Agent 1 | kaeya_skill        | HP s= 5 o= 5 | Dice  4->2  | Hand: [hash_, sweet, skywa]        | DE s=0 o=0
+Round 2  | Agent 0 | hash_brown         | HP s= 7 o= 5 | Dice  1->0  | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=0
+Round 2  | Agent 1 | hash_brown         | HP s= 7 o= 7 | Dice  2->1  | Hand: [sweet, skywa]               | DE s=0 o=0
+Round 2  | Agent 0 | end_round_action   | HP s= 7 o= 7 | Dice  0->0  | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=0
+Round 2  | Agent 1 | end_round_action   | HP s= 7 o= 7 | Dice  1->4  | Hand: [sweet, skywa]               | DE s=1 o=1 | ADV→R3
+Round 3  | Agent 0 | kaeya_skill        | HP s= 7 o= 4 | Dice  4->1  | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=0
+Round 3  | Agent 1 | kaeya_burst        | HP s= 4 o= 4 | Dice  4->2  | Hand: [sweet, skywa]               | DE s=0 o=0
+Round 3  | Agent 0 | end_round_action   | HP s= 4 o= 4 | Dice  1->1  | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=0
+Round 3  | Agent 1 | end_round_action   | HP s= 4 o= 4 | Dice  2->4  | Hand: [sweet, skywa]               | DE s=1 o=1 | ADV→R4
+Round 4  | Agent 0 | kaeya_skill        | HP s= 4 o= 1 | Dice  4->1  | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=0
+Round 4  | Agent 1 | kaeya_normal       | HP s= 1 o= 2 | Dice  4->2  | Hand: [sweet, skywa]               | DE s=0 o=0
+Round 4  | Agent 0 | sweet_madame       | HP s= 3 o= 1 | Dice  1->1  | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 4  | Agent 1 | kaeya_skill        | HP s= 1 o= 0 | Dice  2->0  | Hand: [sweet, skywa]               | DE s=0 o=0
+RESULT: winner = 1
+
+Starting game where PPO is 1
+Round 1  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, sweet, | DE s=1 o=0
+Round 1  | Agent 1 | kaeya_skill        | HP s=10 o= 7 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=1
+Round 1  | Agent 1 | hash_brown         | HP s=10 o= 7 | Dice  1->0  | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=1
+Round 1  | Agent 1 | end_round_action   | HP s=10 o= 7 | Dice  0->4  | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=1 | ADV→R2
+Round 2  | Agent 0 | sweet_madame       | HP s= 8 o=10 | Dice  4->4  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 2  | Agent 1 | kaeya_skill        | HP s=10 o= 5 | Dice  4->1  | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=0
+Round 2  | Agent 0 | kaeya_normal       | HP s= 5 o= 8 | Dice  4->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 2  | Agent 1 | sweet_madame       | HP s= 9 o= 5 | Dice  1->1  | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 2  | Agent 0 | end_round_action   | HP s= 5 o= 9 | Dice  1->1  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=0
+Round 2  | Agent 1 | end_round_action   | HP s= 9 o= 5 | Dice  1->4  | Hand: [broke, sweet, skywa]        | DE s=1 o=1 | ADV→R3
+Round 3  | Agent 0 | hash_brown         | HP s= 7 o= 9 | Dice  4->3  | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 3  | Agent 1 | kaeya_skill        | HP s= 9 o= 4 | Dice  4->1  | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 3  | Agent 0 | kaeya_normal       | HP s= 4 o= 7 | Dice  3->0  | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 3  | Agent 1 | sweet_madame       | HP s= 8 o= 4 | Dice  1->1  | Hand: [broke, skywa]               | DE s=0 o=0
+Round 3  | Agent 0 | end_round_action   | HP s= 4 o= 8 | Dice  0->0  | Hand: [broke, sweet, skywa]        | DE s=1 o=0
+Round 3  | Agent 1 | end_round_action   | HP s= 8 o= 4 | Dice  1->4  | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R4
+Round 4  | Agent 0 | sweet_madame       | HP s= 5 o= 8 | Dice  4->4  | Hand: [broke, skywa]               | DE s=0 o=0
+Round 4  | Agent 1 | kaeya_skill        | HP s= 8 o= 2 | Dice  4->1  | Hand: [broke, skywa]               | DE s=0 o=0
+Round 4  | Agent 0 | kaeya_skill        | HP s= 2 o= 5 | Dice  4->1  | Hand: [broke, skywa]               | DE s=0 o=0
+Round 4  | Agent 1 | end_round_action   | HP s= 5 o= 2 | Dice  1->1  | Hand: [broke, skywa]               | DE s=1 o=0
+Round 4  | Agent 0 | end_round_action   | HP s= 2 o= 5 | Dice  1->4  | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R5
+Round 5  | Agent 1 | kaeya_skill        | HP s= 5 o= 0 | Dice  4->1  | Hand: [broke, skywa]               | DE s=0 o=0
+RESULT: winner = 1
+
+--- Random: Unmasked PPO vs. Masked random --------------------
+Printing win stats as side 0
+games: 1000
+sb3_player: 0
+p0_win_rate: 0.112
+p1_win_rate: 0.121
+tie_rate: 0.767
+win_rate_sb3: 0.112
+win_rate_rand: 0.121
+raw_counts: {'tie': 767, '1': 121, '0': 112}
+
+Printing win stats as side 1
+games: 1000
+sb3_player: 1
+p0_win_rate: 0.142
+p1_win_rate: 0.097
+tie_rate: 0.761
+win_rate_sb3: 0.097
+win_rate_rand: 0.142
+raw_counts: {'0': 142, 'tie': 761, '1': 97}
+
+Starting game where PPO is 0
+Round 1  | Agent 0 | hash_brown         | HP s=10 o=10 | Dice  3->3  -- [cryo omni pyro]->[cryo omni pyro]                          | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=0
+Round 1  | Agent 1 | broken_rimes_echo  | HP s=10 o=10 | Dice  2->2  -- [dendro omni]->[dendro omni]                                | Hand: [hash_, sweet, sweet, skywa] | DE s=0 o=0
+Round 1  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  3->3  -- [cryo omni pyro]->[cryo omni pyro]                          | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=0
+Round 1  | Agent 1 | sweet_madame       | HP s=10 o=10 | Dice  2->2  -- [dendro omni]->[dendro omni]                                | Hand: [hash_, sweet, skywa]        | DE s=0 o=1
+Round 1  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  2->4  -- [dendro omni]->[omni pyro cryo hydro]                       | Hand: [hash_, sweet, skywa]        | DE s=1 o=1 | ADV→R2
+Round 2  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [omni cryo pyro geo]->[omni cryo pyro geo]                  | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=0
+Round 2  | Agent 1 | sweet_madame       | HP s=10 o=10 | Dice  4->4  -- [omni pyro cryo hydro]->[omni pyro cryo hydro]              | Hand: [hash_, skywa]               | DE s=0 o=1
+Round 2  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [omni pyro cryo hydro]->[omni cryo pyro dendro]             | Hand: [hash_, skywa]               | DE s=1 o=1 | ADV→R3
+Round 3  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [dendro cryo hydro omni]->[dendro cryo hydro omni]          | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=0
+Round 3  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [omni cryo pyro dendro]->[dendro hydro pyro cryo]           | Hand: [hash_, skywa]               | DE s=1 o=1 | ADV→R4
+Round 4  | Agent 0 | sweet_madame       | HP s=10 o=10 | Dice  4->4  -- [electro cryo cryo dendro]->[electro cryo cryo dendro]      | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 4  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [dendro hydro pyro cryo]->[dendro hydro pyro cryo]          | Hand: [hash_, skywa]               | DE s=1 o=0
+Round 4  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [electro cryo cryo dendro]->[cryo dendro electro omni]      | Hand: [broke, sweet, skywa]        | DE s=1 o=1 | ADV→R5
+Round 5  | Agent 1 | hash_brown         | HP s=10 o=10 | Dice  3->3  -- [omni cryo anemo]->[omni cryo anemo]                        | Hand: [skywa]                      | DE s=0 o=0
+Round 5  | Agent 0 | sweet_madame       | HP s=10 o=10 | Dice  4->4  -- [cryo dendro electro omni]->[cryo dendro electro omni]      | Hand: [broke, skywa]               | DE s=0 o=0
+Round 5  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  3->3  -- [omni cryo anemo]->[omni cryo anemo]                        | Hand: [skywa]                      | DE s=1 o=0
+Round 5  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [cryo dendro electro omni]->[dendro omni cryo omni]         | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R6
+Round 6  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [cryo electro geo geo]->[cryo electro geo geo]              | Hand: [skywa]                      | DE s=1 o=0
+Round 6  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [dendro omni cryo omni]->[cryo electro dendro dendro]       | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R7
+Round 7  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [electro omni cryo cryo]->[electro omni cryo cryo]          | Hand: [skywa]                      | DE s=1 o=0
+Round 7  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [cryo electro dendro dendro]->[hydro electro omni anemo]    | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R8
+Round 8  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [geo geo cryo omni]->[geo geo cryo omni]                    | Hand: [skywa]                      | DE s=1 o=0
+Round 8  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [hydro electro omni anemo]->[omni pyro pyro cryo]           | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R9
+Round 9  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [omni cryo dendro pyro]->[omni cryo dendro pyro]            | Hand: [skywa]                      | DE s=1 o=0
+Round 9  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [omni pyro pyro cryo]->[hydro geo pyro cryo]                | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R10
+Round 10 | Agent 1 | kaeya_skill        | HP s=10 o= 7 | Dice  2->2  -- [pyro omni]->[pyro omni]                                    | Hand: [skywa]                      | DE s=0 o=0
+Round 10 | Agent 0 | end_round_action   | HP s= 7 o=10 | Dice  4->4  -- [hydro geo pyro cryo]->[hydro geo pyro cryo]                | Hand: [broke, skywa]               | DE s=1 o=0
+Round 10 | Agent 1 | end_round_action   | HP s=10 o= 7 | Dice  2->4  -- [pyro omni]->[hydro dendro cryo pyro]                       | Hand: [skywa]                      | DE s=1 o=1 | ADV→R11
+Round 11 | Agent 0 | end_round_action   | HP s= 7 o=10 | Dice  4->4  -- [omni cryo electro anemo]->[omni cryo electro anemo]        | Hand: [broke, skywa]               | DE s=1 o=0
+Round 11 | Agent 1 | end_round_action   | HP s=10 o= 7 | Dice  4->4  -- [hydro dendro cryo pyro]->[omni cryo dendro geo]            | Hand: [skywa]                      | DE s=1 o=1 | ADV→R12
+Round 12 | Agent 0 | end_round_action   | HP s= 7 o=10 | Dice  4->4  -- [electro omni geo anemo]->[electro omni geo anemo]          | Hand: [broke, skywa]               | DE s=1 o=0
+Round 12 | Agent 1 | end_round_action   | HP s=10 o= 7 | Dice  4->4  -- [omni cryo dendro geo]->[hydro dendro geo cryo]             | Hand: [skywa]                      | DE s=1 o=1 | ADV→R13
+Round 13 | Agent 0 | end_round_action   | HP s= 7 o=10 | Dice  4->4  -- [hydro cryo cryo omni]->[hydro cryo cryo omni]              | Hand: [broke, skywa]               | DE s=1 o=0
+Round 13 | Agent 1 | end_round_action   | HP s=10 o= 7 | Dice  4->4  -- [hydro dendro geo cryo]->[omni anemo cryo omni]             | Hand: [skywa]                      | DE s=1 o=1 | ADV→R14
+Round 14 | Agent 0 | broken_rimes_echo  | HP s= 7 o=10 | Dice  2->2  -- [cryo omni]->[cryo omni]                                    | Hand: [skywa]                      | DE s=0 o=0
+Round 14 | Agent 1 | kaeya_skill        | HP s=10 o= 4 | Dice  2->2  -- [cryo omni]->[cryo omni]                                    | Hand: [skywa]                      | DE s=0 o=0
+Round 14 | Agent 0 | end_round_action   | HP s= 4 o=10 | Dice  2->2  -- [cryo omni]->[cryo omni]                                    | Hand: [skywa]                      | DE s=1 o=0
+Round 14 | Agent 1 | kaeya_burst        | HP s=10 o= 0 | Dice  0->0  -- []->[]                                                      | Hand: [skywa]                      | DE s=0 o=1
+RESULT: winner = 1
+
+Starting game where PPO is 1
+Round 1  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [dendro dendro electro hydro]->[dendro dendro electro hydro]| Hand: [broke, hash_, sweet, sweet, | DE s=1 o=0
+Round 1  | Agent 1 | hash_brown         | HP s=10 o=10 | Dice  3->3  -- [pyro cryo dendro]->[pyro cryo dendro]                      | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=1
+Round 1  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  3->4  -- [pyro cryo dendro]->[anemo pyro cryo omni]                  | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=1 | ADV→R2
+Round 2  | Agent 0 | kaeya_normal       | HP s=10 o= 8 | Dice  1->1  -- [omni]->[omni]                                              | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 2  | Agent 1 | end_round_action   | HP s= 8 o=10 | Dice  4->4  -- [anemo pyro cryo omni]->[anemo pyro cryo omni]              | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=0
+Round 2  | Agent 0 | hash_brown         | HP s=10 o= 8 | Dice  0->0  -- []->[]                                                      | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=1
+Round 2  | Agent 0 | end_round_action   | HP s=10 o= 8 | Dice  0->4  -- []->[cryo cryo omni geo]                                    | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=1 | ADV→R3
+Round 3  | Agent 1 | end_round_action   | HP s= 8 o=10 | Dice  4->4  -- [cryo omni geo cryo]->[cryo omni geo cryo]                  | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=0
+Round 3  | Agent 0 | sweet_madame       | HP s=10 o= 8 | Dice  4->4  -- [cryo cryo omni geo]->[cryo cryo omni geo]                  | Hand: [broke, sweet, skywa]        | DE s=0 o=1
+Round 3  | Agent 0 | end_round_action   | HP s=10 o= 8 | Dice  4->4  -- [cryo cryo omni geo]->[cryo omni pyro cryo]                 | Hand: [broke, sweet, skywa]        | DE s=1 o=1 | ADV→R4
+Round 4  | Agent 1 | end_round_action   | HP s= 8 o=10 | Dice  4->4  -- [omni anemo hydro electro]->[omni anemo hydro electro]      | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=0
+Round 4  | Agent 0 | end_round_action   | HP s=10 o= 8 | Dice  4->4  -- [cryo omni pyro cryo]->[geo dendro cryo omni]               | Hand: [broke, sweet, skywa]        | DE s=1 o=1 | ADV→R5
+Round 5  | Agent 1 | end_round_action   | HP s= 8 o=10 | Dice  4->4  -- [geo geo omni dendro]->[geo geo omni dendro]                | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=0
+Round 5  | Agent 0 | end_round_action   | HP s=10 o= 8 | Dice  4->4  -- [geo dendro cryo omni]->[hydro pyro dendro cryo]            | Hand: [broke, sweet, skywa]        | DE s=1 o=1 | ADV→R6
+Round 6  | Agent 1 | sweet_madame       | HP s= 9 o=10 | Dice  4->4  -- [electro anemo omni geo]->[electro anemo omni geo]          | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 6  | Agent 0 | end_round_action   | HP s=10 o= 9 | Dice  4->4  -- [hydro pyro dendro cryo]->[hydro pyro dendro cryo]          | Hand: [broke, sweet, skywa]        | DE s=1 o=0
+Round 6  | Agent 1 | end_round_action   | HP s= 9 o=10 | Dice  4->4  -- [electro anemo omni geo]->[dendro cryo omni electro]        | Hand: [broke, sweet, skywa]        | DE s=1 o=1 | ADV→R7
+Round 7  | Agent 0 | end_round_action   | HP s=10 o= 9 | Dice  4->4  -- [pyro cryo anemo geo]->[pyro cryo anemo geo]                | Hand: [broke, sweet, skywa]        | DE s=1 o=0
+Round 7  | Agent 1 | sweet_madame       | HP s=10 o=10 | Dice  4->4  -- [dendro cryo omni electro]->[dendro cryo omni electro]      | Hand: [broke, skywa]               | DE s=0 o=1
+Round 7  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [dendro cryo omni electro]->[cryo omni omni dendro]         | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R8
+Round 8  | Agent 0 | sweet_madame       | HP s=10 o=10 | Dice  4->4  -- [cryo geo omni hydro]->[cryo geo omni hydro]                | Hand: [broke, skywa]               | DE s=0 o=0
+Round 8  | Agent 1 | broken_rimes_echo  | HP s=10 o=10 | Dice  2->2  -- [omni dendro]->[omni dendro]                                | Hand: [skywa]                      | DE s=0 o=0
+Round 8  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [cryo geo omni hydro]->[cryo geo omni hydro]                | Hand: [broke, skywa]               | DE s=1 o=0
+Round 8  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  2->4  -- [omni dendro]->[geo cryo dendro dendro]                     | Hand: [skywa]                      | DE s=1 o=1 | ADV→R9
+Round 9  | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [dendro omni electro dendro]->[dendro omni electro dendro]  | Hand: [broke, skywa]               | DE s=1 o=0
+Round 9  | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [geo cryo dendro dendro]->[omni omni omni hydro]            | Hand: [skywa]                      | DE s=1 o=1 | ADV→R10
+Round 10 | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [dendro omni omni cryo]->[dendro omni omni cryo]            | Hand: [broke, skywa]               | DE s=1 o=0
+Round 10 | Agent 1 | skyward_blade      | HP s=10 o=10 | Dice  1->1  -- [hydro]->[hydro]                                            | Hand: []                           | DE s=0 o=1
+Round 10 | Agent 1 | end_round_action   | HP s=10 o=10 | Dice  1->4  -- [hydro]->[anemo electro omni omni]                          | Hand: []                           | DE s=1 o=1 | ADV→R11
+Round 11 | Agent 0 | end_round_action   | HP s=10 o=10 | Dice  4->4  -- [geo pyro cryo omni]->[geo pyro cryo omni]                  | Hand: [broke, skywa]               | DE s=1 o=0
+Round 11 | Agent 1 | kaeya_normal       | HP s=10 o= 6 | Dice  2->2  -- [omni omni]->[omni omni]                                    | Hand: []                           | DE s=0 o=1
+Round 11 | Agent 1 | kaeya_skill        | HP s=10 o= 2 | Dice  0->0  -- []->[]                                                      | Hand: []                           | DE s=0 o=1
+Round 11 | Agent 1 | end_round_action   | HP s=10 o= 2 | Dice  0->4  -- []->[cryo pyro cryo omni]                                   | Hand: []                           | DE s=1 o=1 | ADV→R12
+Round 12 | Agent 0 | end_round_action   | HP s= 2 o=10 | Dice  4->4  -- [electro cryo omni geo]->[electro cryo omni geo]            | Hand: [broke, skywa]               | DE s=1 o=0
+Round 12 | Agent 1 | end_round_action   | HP s=10 o= 2 | Dice  4->4  -- [cryo pyro cryo omni]->[omni geo cryo cryo]                 | Hand: []                           | DE s=1 o=1 | ADV→R13
+Round 13 | Agent 0 | end_round_action   | HP s= 2 o=10 | Dice  4->4  -- [geo omni geo omni]->[geo omni geo omni]                    | Hand: [broke, skywa]               | DE s=1 o=0
+Round 13 | Agent 1 | end_round_action   | HP s=10 o= 2 | Dice  4->4  -- [omni geo cryo cryo]->[cryo omni geo pyro]                  | Hand: []                           | DE s=1 o=1 | ADV→R14
+Round 14 | Agent 0 | broken_rimes_echo  | HP s= 2 o=10 | Dice  2->2  -- [omni omni]->[omni omni]                                    | Hand: [skywa]                      | DE s=0 o=0
+Round 14 | Agent 1 | kaeya_burst        | HP s=10 o= 0 | Dice  2->2  -- [geo pyro]->[geo pyro]                                      | Hand: []                           | DE s=0 o=0
+RESULT: winner = 1
+

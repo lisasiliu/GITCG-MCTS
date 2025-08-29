@@ -4,24 +4,53 @@ Evaluate the following pairs:
 1. Unmasked PPO vs. Masked random
 '''
 
-'''
-1. Unmasked PPO vs. Masked random
-'''
-from train_ppo import make_env
-from env_mini_discrete.mini_eval_utils import eval_model_vs_valid_random, show_one_game
-
 from stable_baselines3 import PPO
+from sb3_contrib import MaskablePPO
 
-# evaluate 50 games with SB3 as player 0, and log to wandb
+'''
+Discrete: Unmasked PPO vs. Masked random 
+'''
+from env_mini_discrete.mini_eval_utils import eval_model_vs_valid_random, show_one_game
+print("--- Discrete: Unmasked PPO vs. Masked random ------------------")
 model = PPO.load("models/ppo_mini_discrete")
 for side in range(2):
-    stats = eval_model_vs_valid_random(model, side=str(side), n_games=100, log_wandb=True)
+    stats = eval_model_vs_valid_random(model, side=str(side), n_games=1000, log_wandb=True)
     print("Printing win stats as side", str(side))
     for key, value in stats.items():
         print(f"{key}: {value}")
     print()
+for side in range(2): # show the full move-by-move of one game per side
+    print("Starting game where PPO is", str(side))
+    show_one_game(model, side=str(side))
 
-# show the full move-by-move of one game as player 1
+
+'''
+Discrete: Masked PPO vs. Masked random 
+'''
+print("--- Discrete: Masked PPO vs. Masked random ------------------")
+model = MaskablePPO.load("models/ppo_mini_discrete_masked")
 for side in range(2):
+    stats = eval_model_vs_valid_random(model, side=str(side), n_games=1000, log_wandb=True)
+    print("Printing win stats as side", str(side))
+    for key, value in stats.items():
+        print(f"{key}: {value}")
+    print()
+for side in range(2): # show the full move-by-move of one game per side
+    print("Starting game where PPO is", str(side))
+    show_one_game(model, side=str(side))
+
+'''
+Random: Unmasked PPO vs. Masked random 
+'''
+from env_mini_random.mini_eval_utils import eval_model_vs_valid_random, show_one_game
+print("--- Random: Unmasked PPO vs. Masked random --------------------")
+model = PPO.load("models/ppo_mini_random")
+for side in range(2):
+    stats = eval_model_vs_valid_random(model, side=str(side), n_games=1000, log_wandb=True)
+    print("Printing win stats as side", str(side))
+    for key, value in stats.items():
+        print(f"{key}: {value}")
+    print()
+for side in range(2): # show the full move-by-move of one game per side
     print("Starting game where PPO is", str(side))
     show_one_game(model, side=str(side))
