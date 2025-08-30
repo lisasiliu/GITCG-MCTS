@@ -32,7 +32,7 @@ from sb3_contrib.common.maskable.callbacks import MaskableEvalCallback
 import wandb
 from wandb.integration.sb3 import WandbCallback
 
-env_mode = "discrete" # "random" or "discrete"
+env_mode = "random" # "random" or "discrete"
 if env_mode == "random":
     from env_mini_random.mini_eval_utils import GymEnv
     from env_mini_random.mini_eval_utils import eval_model_vs_valid_random, show_one_game, play_one_game
@@ -57,43 +57,84 @@ def make_env():
         env = AECToGymWrapper(env)
         env = ActionMasker(env, mask_fn)
     return env
-
 class AECToGymWrapper(gym.Env):
-    def __init__(self, aec_env):
+    def __init__(self, aec_env, debug=False):
         super().__init__()
+        self.debug = debug
         self.aec_env = aec_env
         self.aec_env.reset()
-        self.observation_space = self.aec_env.observation_space(self.aec_env.agent_selection)
-        self.action_space = self.aec_env.action_space(self.aec_env.agent_selection)
-        self.agent = self.aec_env.agents[0]
-        self.agent_selection = self.aec_env.agent_selection
-        self.valid_action_mask = self.get_action_masks() # update action mask
+
+        cur = self.aec_env.agent_selection
+        self.observation_space = self.aec_env.observation_space(cur)
+        self.action_space      = self.aec_env.action_space(cur)
+
+        self.agent = cur                     # acting agent pointer
+        self.valid_action_mask = self.get_action_masks()  # must correspond to self.agent
+
+    # ---------- tiny helper ----------
+    def _assert_sync(self, where):
+        assert self.agent == self.aec_env.agent_selection, (
+            f"[{where}] desync: wrapper.agent={self.agent} "
+            f"env.agent_selection={self.aec_env.agent_selection}"
+        )
+
+    def _print_mask(self, where):
+        if not self.debug: return
+        m = self.get_action_masks().astype(int)
+        vocab = getattr(self.aec_env, "vocab", [str(i) for i in range(len(m))])
+        print(f"\n[{where}] agent turn: {self.agent}")
+        print("mask:", m.tolist())
+        for i, ok in enumerate(m):
+            print(f"{i:2d} {vocab[i]:18s} legal={ok}")
+
+    # ---------- gym API ----------
     def reset(self, **kwargs):
         self.aec_env.reset()
+        self.agent = self.aec_env.agent_selection       # sync to current
+        self._assert_sync("reset-after-sync")
         obs = self.aec_env.observe(self.agent)
-        self.valid_action_mask = self.get_action_masks() # update action mask
-        info = {}
-        return obs, info
-    def step(self, action):
-        self.aec_env.step(action)
-        terminated = self.aec_env.terminations[self.agent]
-        truncated = self.aec_env.truncations[self.agent]
-        done = terminated or truncated
-        obs = self.aec_env.observe(self.agent) if not done else None
-        reward = self.aec_env.rewards[self.agent]
-        self.valid_action_mask = self.get_action_masks() # update action mask
-        info = {}
-        return obs, reward, terminated, truncated, info
-    def get_action_masks(self):
-        """Return action masks for the current agent"""
-        return self.aec_env.get_action_mask(self.agent)
-    def render(self):
-        return self.aec_env.render()
-    def close(self):
-        self.aec_env.close()
+        self.valid_action_mask = self.get_action_masks()
+        self._print_mask("reset")
+        return obs, {}
 
-def mask_fn(env): # pass in AECToGymWrapper
+    def step(self, action):
+        # ensure we are choosing for the current agent
+        self._assert_sync("pre-step (acting)")
+        acting = self.agent
+
+        if self.debug:
+            print(f"\n[pre-step] acting={acting} action_idx={action}")
+
+        # step env (advances AEC internal pointer)
+        self.aec_env.step(action)
+
+        # collect results for the agent that JUST acted
+        terminated = bool(self.aec_env.terminations[acting])
+        truncated  = bool(self.aec_env.truncations[acting])
+        reward     = float(self.aec_env.rewards[acting])
+
+        # advance our pointer to whoever is up next
+        self.agent = self.aec_env.agent_selection
+        self._assert_sync("post-step (next)")
+        obs = None if (terminated or truncated) else self.aec_env.observe(self.agent)
+
+        # refresh mask for the NEXT agent (this obs)
+        self.valid_action_mask = self.get_action_masks()
+        self._print_mask("post-step")
+        return obs, reward, terminated, truncated, {}
+
+    def get_action_masks(self):
+        # extra guard: always serve mask for the current agent
+        self._assert_sync("get_action_masks")
+        m = self.aec_env.get_action_mask(self.agent)
+        return np.asarray(m, dtype=bool)
+
+    def render(self): return self.aec_env.render()
+    def close(self):  self.aec_env.close()
+
+def mask_fn(env):     # used by ActionMasker
     return env.valid_action_mask
+
 
 # --- Custom evaluation vs random bot -------------------------------------------
 class AECPvRandomEvalCallback(BaseCallback):
@@ -133,14 +174,24 @@ class AECPvRandomEvalCallback(BaseCallback):
             for i in range(self.n_games):
                 # offset seed per episode so results are stable/reproducible
                 ep_seed = None if self.seed is None else (self.seed + self.n_calls + i)
-                result, _ = play_one_game(
-                    model=self.model,
-                    side=self.side,
-                    deterministic=True,
-                    seed=ep_seed,
-                    verbose=False,
-                    masked=True
-                )
+                if ppo_mode == True:
+                    result, _ = play_one_game(
+                        model=self.model,
+                        side=self.side,
+                        deterministic=True,
+                        seed=ep_seed,
+                        verbose=False,
+                        masked=True
+                    )
+                else:
+                    result, _ = play_one_game(
+                        model=self.model,
+                        side=self.side,
+                        deterministic=True,
+                        seed=ep_seed,
+                        verbose=False,
+                        masked=False
+                    )
                 wins[result] += 1
 
                 # log a per-episode flag set
@@ -202,11 +253,10 @@ if __name__ == "__main__":
         model = MaskablePPO(
             policy=config["policy_type"],
             env=env,     # action masked env
-            verbose=1,
-            tensorboard_log=f"runs/{run.id}",
-            n_steps=128,                    
-            batch_size=128,
-            ent_coef=0.05,
+            n_steps=128,           
+            batch_size=32,
+            normalize_advantage=True,
+            verbose=1
         )
     model.learn(
         total_timesteps=config["total_timesteps"],

@@ -284,6 +284,7 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
                 atk += bonus
 
             total_dmg = atk
+            # print("total_dmg = atk", total_dmg)
 
             # energy handling
             if "energy" in self.actions[action_word]:
@@ -316,8 +317,10 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
             # apply effects
             if "hp" in self.actions[action_word]:
                 cur_hp = self.state[agent]["observation"]["Kaeya"]["hp"]
-                cur_hp += self.actions[action_word]["hp"]
                 max_hp = self.state[agent]["observation"]["Kaeya"]["max_hp"]
+                if cur_hp == max_hp: # wasted a heal, penalty
+                    self.rewards[agent] -= 40
+                cur_hp += self.actions[action_word]["hp"]
                 self.state[agent]["observation"]["Kaeya"]["hp"] = min(max_hp, cur_hp)
                 self.state[agent]["observation"]["Kaeya"]["full"] = 1
 
@@ -336,12 +339,13 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
 
         # shaping reward: attack damage + retain HP
         if action_word in ["kaeya_normal", "kaeya_skill", "kaeya_burst"]:
-            self.rewards[agent] += total_dmg + self.state[agent]["observation"]["Kaeya"]["hp"]
+            self.rewards[agent] += total_dmg
+            # self.rewards[agent] += total_dmg + self.state[agent]["observation"]["Kaeya"]["hp"]
 
         # win condition - kills opponent
         if self.state[other_agent]["observation"]["Kaeya"]["hp"] <= 0:
-            self.rewards[agent] += 100              # big reward
-            self.rewards[other_agent] -= 100        # big loss
+            self.rewards[agent] += 1000              # big reward
+            self.rewards[other_agent] -= 1000        # big loss
             self.infos[agent] = {"status": "winner"}
             self.infos[other_agent] = {"status": "loser"}
             self.terminations[agent] = True
@@ -371,9 +375,8 @@ class GITCGDiscreteMiniGymEnv(AECEnv):
             # return
 
         # accumulate rewards
-        cumulative_multiplier = 0.0003 # scale rewards to be smaller
-        self._cumulative_rewards[agent] += self.rewards[agent] * cumulative_multiplier
-        self._cumulative_rewards[other_agent] += self.rewards[other_agent] * cumulative_multiplier
+        self._cumulative_rewards[agent] = self.rewards[agent] 
+        self._cumulative_rewards[other_agent] = self.rewards[other_agent] 
 
         # switch player for the next step
         self.agent_selection = self._agent_selector.next()

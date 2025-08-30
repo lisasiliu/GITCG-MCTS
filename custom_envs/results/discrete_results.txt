@@ -1,0 +1,137 @@
+--- Discrete: Unmasked PPO vs. Masked random ------------------
+Printing win stats as side 0
+games: 1000
+sb3_player: 0
+p0_win_rate: 0.8
+p1_win_rate: 0.2
+tie_rate: 0.0
+win_rate_sb3: 0.8
+win_rate_rand: 0.2
+raw_counts: {'0': 800, '1': 200}
+
+Printing win stats as side 1
+games: 1000
+sb3_player: 1
+p0_win_rate: 0.163
+p1_win_rate: 0.837
+tie_rate: 0.0
+win_rate_sb3: 0.837
+win_rate_rand: 0.163
+raw_counts: {'1': 837, '0': 163}
+
+Starting game where PPO is 0
+Round 1  | Agent 0 | kaeya_skill        | HP s=10 o= 7 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 1  | Agent 1 | hash_brown         | HP s= 9 o=10 | Dice  4->3  | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=0
+Round 1  | Agent 0 | end_round_action   | HP s=10 o= 9 | Dice  1->1  | Hand: [broke, hash_, sweet, sweet, | DE s=1 o=0
+Round 1  | Agent 1 | kaeya_normal       | HP s= 9 o= 8 | Dice  3->0  | Hand: [broke, sweet, sweet, skywa] | DE s=0 o=1
+Round 1  | Agent 1 | end_round_action   | HP s= 9 o= 8 | Dice  0->4  | Hand: [broke, sweet, sweet, skywa] | DE s=1 o=1 | ADV→R2
+Round 2  | Agent 0 | kaeya_skill        | HP s= 8 o= 6 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 2  | Agent 1 | skyward_blade      | HP s= 6 o= 8 | Dice  4->1  | Hand: [broke, sweet, sweet]        | DE s=0 o=0
+Round 2  | Agent 0 | sweet_madame       | HP s= 9 o= 6 | Dice  1->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 2  | Agent 1 | end_round_action   | HP s= 6 o= 9 | Dice  1->1  | Hand: [broke, sweet, sweet]        | DE s=1 o=0
+Round 2  | Agent 0 | end_round_action   | HP s= 9 o= 6 | Dice  1->4  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=1 | ADV→R3
+Round 3  | Agent 1 | sweet_madame       | HP s= 7 o= 9 | Dice  4->4  | Hand: [broke, sweet]               | DE s=0 o=0
+Round 3  | Agent 0 | kaeya_skill        | HP s= 9 o= 4 | Dice  4->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 3  | Agent 1 | end_round_action   | HP s= 4 o= 9 | Dice  4->4  | Hand: [broke, sweet]               | DE s=1 o=0
+Round 3  | Agent 0 | sweet_madame       | HP s=10 o= 4 | Dice  1->1  | Hand: [broke, hash_, skywa]        | DE s=0 o=1
+Round 3  | Agent 0 | end_round_action   | HP s=10 o= 4 | Dice  1->4  | Hand: [broke, hash_, skywa]        | DE s=1 o=1 | ADV→R4
+Round 4  | Agent 1 | end_round_action   | HP s= 4 o=10 | Dice  4->4  | Hand: [broke, sweet]               | DE s=1 o=0
+Round 4  | Agent 0 | kaeya_skill        | HP s=10 o= 1 | Dice  4->1  | Hand: [broke, hash_, skywa]        | DE s=0 o=1
+Round 4  | Agent 0 | end_round_action   | HP s=10 o= 1 | Dice  1->4  | Hand: [broke, hash_, skywa]        | DE s=1 o=1 | ADV→R5
+Round 5  | Agent 1 | kaeya_skill        | HP s= 1 o= 5 | Dice  4->1  | Hand: [broke, sweet]               | DE s=0 o=0
+Round 5  | Agent 0 | kaeya_skill        | HP s= 5 o= 0 | Dice  4->1  | Hand: [broke, hash_, skywa]        | DE s=0 o=0
+RESULT: winner = 0
+
+Starting game where PPO is 1
+Round 1  | Agent 0 | kaeya_normal       | HP s=10 o= 8 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 1  | Agent 1 | kaeya_skill        | HP s= 8 o= 7 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 1  | Agent 0 | sweet_madame       | HP s= 8 o= 8 | Dice  1->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 1  | Agent 1 | sweet_madame       | HP s= 9 o= 8 | Dice  1->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 1  | Agent 0 | end_round_action   | HP s= 8 o= 9 | Dice  1->1  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=0
+Round 1  | Agent 1 | end_round_action   | HP s= 9 o= 8 | Dice  1->4  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=1 | ADV→R2
+Round 2  | Agent 0 | hash_brown         | HP s=10 o= 9 | Dice  4->3  | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 2  | Agent 1 | kaeya_skill        | HP s= 9 o= 7 | Dice  4->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 2  | Agent 0 | broken_rimes_echo  | HP s= 7 o= 9 | Dice  3->1  | Hand: [sweet, skywa]               | DE s=0 o=0
+Round 2  | Agent 1 | sweet_madame       | HP s=10 o= 7 | Dice  1->1  | Hand: [broke, hash_, skywa]        | DE s=0 o=0
+Round 2  | Agent 0 | end_round_action   | HP s= 7 o=10 | Dice  1->1  | Hand: [sweet, skywa]               | DE s=1 o=0
+Round 2  | Agent 1 | end_round_action   | HP s=10 o= 7 | Dice  1->4  | Hand: [broke, hash_, skywa]        | DE s=1 o=1 | ADV→R3
+Round 3  | Agent 0 | sweet_madame       | HP s= 8 o=10 | Dice  4->4  | Hand: [skywa]                      | DE s=0 o=0
+Round 3  | Agent 1 | kaeya_skill        | HP s=10 o= 5 | Dice  4->1  | Hand: [broke, hash_, skywa]        | DE s=0 o=0
+Round 3  | Agent 0 | kaeya_skill        | HP s= 5 o= 7 | Dice  4->2  | Hand: [skywa]                      | DE s=0 o=0
+Round 3  | Agent 1 | hash_brown         | HP s= 9 o= 5 | Dice  1->0  | Hand: [broke, skywa]               | DE s=0 o=0
+Round 3  | Agent 0 | kaeya_skill        | HP s= 5 o= 6 | Dice  2->0  | Hand: [skywa]                      | DE s=0 o=0
+Round 3  | Agent 1 | end_round_action   | HP s= 6 o= 5 | Dice  0->0  | Hand: [broke, skywa]               | DE s=1 o=0
+Round 3  | Agent 0 | end_round_action   | HP s= 5 o= 6 | Dice  0->4  | Hand: [skywa]                      | DE s=1 o=1 | ADV→R4
+Round 4  | Agent 1 | kaeya_skill        | HP s= 6 o= 2 | Dice  4->1  | Hand: [broke, skywa]               | DE s=0 o=0
+Round 4  | Agent 0 | end_round_action   | HP s= 2 o= 6 | Dice  4->4  | Hand: [skywa]                      | DE s=1 o=0
+Round 4  | Agent 1 | end_round_action   | HP s= 6 o= 2 | Dice  1->4  | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R5
+Round 5  | Agent 0 | kaeya_burst        | HP s= 2 o= 3 | Dice  4->2  | Hand: [skywa]                      | DE s=0 o=0
+Round 5  | Agent 1 | kaeya_skill        | HP s= 3 o= 0 | Dice  4->1  | Hand: [broke, skywa]               | DE s=0 o=0
+RESULT: winner = 1
+
+--- Discrete: Masked PPO vs. Masked random ------------------
+Printing win stats as side 0
+games: 1000
+sb3_player: 0
+p0_win_rate: 0.691
+p1_win_rate: 0.309
+tie_rate: 0.0
+win_rate_sb3: 0.691
+win_rate_rand: 0.309
+raw_counts: {'0': 691, '1': 309}
+
+Printing win stats as side 1
+games: 1000
+sb3_player: 1
+p0_win_rate: 0.231
+p1_win_rate: 0.769
+tie_rate: 0.0
+win_rate_sb3: 0.769
+win_rate_rand: 0.231
+raw_counts: {'1': 769, '0': 231}
+
+Starting game where PPO is 0
+Round 1  | Agent 0 | kaeya_skill        | HP s=10 o= 7 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 1  | Agent 1 | skyward_blade      | HP s= 7 o=10 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet] | DE s=0 o=0
+Round 1  | Agent 0 | sweet_madame       | HP s=10 o= 7 | Dice  1->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 1  | Agent 1 | hash_brown         | HP s= 9 o=10 | Dice  1->0  | Hand: [broke, sweet, sweet]        | DE s=0 o=0
+Round 1  | Agent 0 | end_round_action   | HP s=10 o= 9 | Dice  1->1  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=0
+Round 1  | Agent 1 | end_round_action   | HP s= 9 o=10 | Dice  0->4  | Hand: [broke, sweet, sweet]        | DE s=1 o=1 | ADV→R2
+Round 2  | Agent 0 | kaeya_skill        | HP s=10 o= 6 | Dice  4->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 2  | Agent 1 | kaeya_skill        | HP s= 6 o= 5 | Dice  4->1  | Hand: [broke, sweet, sweet]        | DE s=0 o=0
+Round 2  | Agent 0 | end_round_action   | HP s= 5 o= 6 | Dice  1->1  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=0
+Round 2  | Agent 1 | sweet_madame       | HP s= 7 o= 5 | Dice  1->1  | Hand: [broke, sweet]               | DE s=0 o=1
+Round 2  | Agent 1 | end_round_action   | HP s= 7 o= 5 | Dice  1->4  | Hand: [broke, sweet]               | DE s=1 o=1 | ADV→R3
+Round 3  | Agent 0 | kaeya_skill        | HP s= 5 o= 4 | Dice  4->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 3  | Agent 1 | sweet_madame       | HP s= 5 o= 5 | Dice  4->4  | Hand: [broke]                      | DE s=0 o=0
+Round 3  | Agent 0 | hash_brown         | HP s= 7 o= 5 | Dice  1->0  | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 3  | Agent 1 | kaeya_skill        | HP s= 5 o= 2 | Dice  4->1  | Hand: [broke]                      | DE s=0 o=0
+Round 3  | Agent 0 | end_round_action   | HP s= 2 o= 5 | Dice  0->0  | Hand: [broke, sweet, skywa]        | DE s=1 o=0
+Round 3  | Agent 1 | end_round_action   | HP s= 5 o= 2 | Dice  1->4  | Hand: [broke]                      | DE s=1 o=1 | ADV→R4
+Round 4  | Agent 0 | kaeya_skill        | HP s= 2 o= 2 | Dice  4->1  | Hand: [broke, sweet, skywa]        | DE s=0 o=0
+Round 4  | Agent 1 | kaeya_normal       | HP s= 2 o= 0 | Dice  4->1  | Hand: [broke]                      | DE s=0 o=0
+RESULT: winner = 1
+
+Starting game where PPO is 1
+Round 1  | Agent 0 | kaeya_skill        | HP s=10 o= 7 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 1  | Agent 1 | kaeya_skill        | HP s= 7 o= 7 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 1  | Agent 0 | end_round_action   | HP s= 7 o= 7 | Dice  1->1  | Hand: [broke, hash_, sweet, sweet, | DE s=1 o=0
+Round 1  | Agent 1 | sweet_madame       | HP s= 8 o= 7 | Dice  1->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=1
+Round 1  | Agent 1 | end_round_action   | HP s= 8 o= 7 | Dice  1->4  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=1 | ADV→R2
+Round 2  | Agent 0 | kaeya_normal       | HP s= 7 o= 6 | Dice  4->1  | Hand: [broke, hash_, sweet, sweet, | DE s=0 o=0
+Round 2  | Agent 1 | kaeya_skill        | HP s= 6 o= 4 | Dice  4->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 2  | Agent 0 | sweet_madame       | HP s= 5 o= 6 | Dice  1->1  | Hand: [broke, hash_, sweet, skywa] | DE s=0 o=0
+Round 2  | Agent 1 | sweet_madame       | HP s= 7 o= 5 | Dice  1->1  | Hand: [broke, hash_, skywa]        | DE s=0 o=0
+Round 2  | Agent 0 | end_round_action   | HP s= 5 o= 7 | Dice  1->1  | Hand: [broke, hash_, sweet, skywa] | DE s=1 o=0
+Round 2  | Agent 1 | end_round_action   | HP s= 7 o= 5 | Dice  1->4  | Hand: [broke, hash_, skywa]        | DE s=1 o=1 | ADV→R3
+Round 3  | Agent 0 | sweet_madame       | HP s= 6 o= 7 | Dice  4->4  | Hand: [broke, hash_, skywa]        | DE s=0 o=0
+Round 3  | Agent 1 | kaeya_skill        | HP s= 7 o= 3 | Dice  4->1  | Hand: [broke, hash_, skywa]        | DE s=0 o=0
+Round 3  | Agent 0 | skyward_blade      | HP s= 3 o= 7 | Dice  4->1  | Hand: [broke, hash_]               | DE s=0 o=0
+Round 3  | Agent 1 | hash_brown         | HP s= 9 o= 3 | Dice  1->0  | Hand: [broke, skywa]               | DE s=0 o=0
+Round 3  | Agent 0 | end_round_action   | HP s= 3 o= 9 | Dice  1->1  | Hand: [broke, hash_]               | DE s=1 o=0
+Round 3  | Agent 1 | end_round_action   | HP s= 9 o= 3 | Dice  0->4  | Hand: [broke, skywa]               | DE s=1 o=1 | ADV→R4
+Round 4  | Agent 0 | end_round_action   | HP s= 3 o= 9 | Dice  4->4  | Hand: [broke, hash_]               | DE s=1 o=0
+Round 4  | Agent 1 | broken_rimes_echo  | HP s= 9 o= 3 | Dice  4->2  | Hand: [skywa]                      | DE s=0 o=1
+Round 4  | Agent 1 | kaeya_skill        | HP s= 9 o= 0 | Dice  2->0  | Hand: [skywa]                      | DE s=0 o=1
+RESULT: winner = 1
+
